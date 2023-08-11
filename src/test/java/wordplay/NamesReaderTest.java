@@ -15,9 +15,9 @@ public class NamesReaderTest {
         assertFalse(names.isEmpty(), "List of read names cannot be empty");
 
         var first = names.get(0);
-        assertEquals("anne", first, "First name in the file should be Anne");
+        assertEquals("Anne", first, "First name in the file should be Anne");
 
         var last = names.get(names.size() - 1);
-        assertEquals("åsa-maria", last, "Last name in the file should be Åsa-Maria");
+        assertEquals("Åsa-Maria", last, "Last name in the file should be Åsa-Maria");
     }
 }
