@@ -120,6 +120,9 @@ application {
 
 💡 Huomaa, että tiedostojen kirjainkoko vaihtelee. Nimitiedostossa esimerkiksi `"Tuuli"` on kirjoitettu isolla alkukirjaimella, kun sanakirjassa se on kirjoitettu pienellä `"tuuli"`.
 
+🐌 Saatat huomata ohjelmaa suorittaessasi, että se toimii yllättävän hitaasti. Kyse ei ole todennäköisesti tietokoneesi suorituskyvystä, vaan hitaasta algoritmista. Algoritmien tehokkuuteen palataan myöhemmissä tehtäväkierroksissa.
+
+
 ## Osa 3: ohjelman paketointi JAR-tiedostoksi
 
 Kun olet saanut pääohjelman toimimaan, paketoi koko ohjelma suoritettavaksi [jar-paketiksi](https://en.wikipedia.org/wiki/JAR_(file_format)).
