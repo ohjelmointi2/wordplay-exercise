@@ -96,6 +96,8 @@ gradlew.bat test --tests NamesReaderTest    # windows
 
 💡 Jos testi ei mene läpi, kokeile suorittaa komento uudestaan siten, että lisäät loppuun argumentin `--info`. Näin saat tarkemman tiedon siitä, mikä testissä meni pieleen. Voit myös avata HTML-muotoisen testiraportin, joka kertoo lisätietoja virheestä. Vaihtoehtoisesti voit suorittaa testit koodieditorisi testauspainikkeilla.
 
+💡 Sinun ei vielä tässä vaiheessa tarvitse perehtyä varsinaisen testin tekniseen toteutukseen. Tässä vaiheessa riittää, että suoritat testin ja tutustut sen mahdollisesti tuottamiin virheilmoituksiin.
+
 
 ## Osa 2: pääohjelma ja nimien etsiminen sanakirjasta
 
