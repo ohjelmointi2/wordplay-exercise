@@ -2,7 +2,7 @@
 
 Tämän tehtävän tarkoituksena on tutustua kurssilla käytettäviin työkaluihin sekä kerrata ohjelmointitaitoja luokkien, merkkijonojen, toistorakenteiden ja listojen parissa.
 
-Tehtävässä kehitettävän sovelluksen tarkoituksena on hyödyntää avointa nimi- ja sanakirja-aineistoa ja etsiä sellaisia etunimiä, joilla on myös jokin toinen merkitys.
+Tehtävässä kehitettävän sovelluksen tarkoituksena on hyödyntää avointa nimi- ja sanakirja-aineistoa ja etsiä sellaisia etunimiä, joilla on myös jokin toinen merkitys. Tällaisia nimiä ovat esimerkiksi Tuuli ja Onni, 
 
 Tehtävä koostuu useammasta osasta, jotka arvioidaan erikseen. Ennen oman toteutuksen aloittamista varmista, että saat suoritettua tehtäväpohjassa valmiina olevan koodin ongelmitta `run`-komennolla:
 
