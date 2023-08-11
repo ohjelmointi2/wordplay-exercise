@@ -31,7 +31,7 @@ dependencies {
 
 application {
     // Define the main class for the application.
-    mainClass = 'gradle.template.App'
+    mainClass = 'wordplay.App'
 }
 
 tasks.named('test') {
