@@ -107,7 +107,7 @@ gradlew.bat test --tests NamesReaderTest    # windows
 ```
 
 
-## Osa 3: pääohjelma ja nimien etsiminen sanakirjasta *(perusteet, 20 %)*
+## Osa 3: pääohjelma ja nimien etsiminen sanakirjasta *(perusteet, 30 %)*
 
 Molemmat luokkasi toimivat ja läpäisevät niille kirjoitetut testit, on aika toteuttaa varsinainen pääohjelma. Pääohjelma kirjoitetaan [`App.java`](./src/main/java/wordplay/App.java)-luokkaan.
 
@@ -135,7 +135,7 @@ application {
 🚀 *Mikäli ohjelma toimii hitaasti, johtuu se todennäköisesti valtavasta määrästä merkkijonojen vertailuoperaatioita. Mieti miten saat minimoitua vertailuoperaatioiden ja kirjainkokoa huomioivien operaatioiden määrän.*
 
 
-## Osa 4: ohjelman paketointi JAR-tiedostoksi *(perusteet, 20 %)*
+## Osa 4: ohjelman paketointi JAR-tiedostoksi *(perusteet, 10 %)*
 
 Kun olet saanut pääohjelman toimimaan, paketoi koko ohjelma suoritettavaksi [jar-paketiksi](https://en.wikipedia.org/wiki/JAR_(file_format)).
 
