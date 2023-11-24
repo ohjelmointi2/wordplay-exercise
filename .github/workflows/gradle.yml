@@ -28,6 +28,10 @@ jobs:
       - name: Compile source code
         run: ./gradlew compileJava compileTestJava
 
-      # Make sure compilation succeeds before attempting to run autograding
+      # Run the tests
       - name: Run tests
         run: ./gradlew test
+
+      # Finally, run the benchmark
+      - name: Run benchmark
+        run: ./gradlew run
