@@ -18,6 +18,9 @@ import wordplay.io.DictionaryReader;
  * to access it. The second method uses an iterator to iterate over the
  * list. There should be a significant difference in the time it takes
  * to iterate over the list using these two approaches.
+ *
+ * This class uses the Java Microbenchmark Harness (JMH) to measure the
+ * time it takes to perform certain operations on a LinkedList.
  */
 public class LinkedListPerformance extends BenchmarkConfig {
 

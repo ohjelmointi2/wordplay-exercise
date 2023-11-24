@@ -20,9 +20,7 @@ import wordplay.io.DictionaryReader;
  *
  * Unlike LinkedLists, the time complexity of accessing an element by its index
  * is O(1) for an ArrayList. This means that the time it takes to access an
- * element does not depend on the size of the list. Let's see if this is true by
- * doubling the size of the list and measuring the time it takes to access the
- * elements by their index.
+ * element does not depend on the size of the list.
  *
  * This class uses the Java Microbenchmark Harness (JMH) to measure the
  * time it takes to perform certain operations on an ArrayList.
