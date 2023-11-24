@@ -225,9 +225,10 @@ classDiagram
         +readFile(Path file)
     }
 
-    NamesInDictionary --> WordplayReader : uses
-    WordplayReader <-- DictionaryReader: implements
-    WordplayReader <-- NamesReader : implements
+    NamesInDictionary --> DictionaryReader : uses
+    NamesInDictionary --> NamesReader : uses
+    DictionaryReader --> WordplayReader: implements
+    NamesReader --> WordplayReader : implements
 ```
 
 Yhteisen `readFile`-metodin lisäksi `NamesReader`- ja `DictionaryReader`-luokilla on omat apumetodit juuri niiden käsittelemien tiedostojen lukemiseksi:
