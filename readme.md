@@ -31,11 +31,13 @@ Suorituskykytestit on toteutettu [Java Microbenchmark Harness (JMH)](https://git
 Suorita suorituskykytestit suorittamalla [`BenchmarkRunner`-luokka](./src/main/java/wordplay/benchmark/BenchmarkRunner.java) joko koodieditorillasi tai Gradlen avulla:
 
 ```sh
-./gradlew run       # unix
-.\gradlew.bat run   # windows
+./gradlew run      # unix
+.\gradlew.bat run  # windows
 ```
 
-`BenchmarkRunner` suorittaa joukon suorituskykytestejä [JMH-työkalulla](https://github.com/openjdk/jmh) ja tulostaa tietoa testien edistymisestä. Testien tulos, eli eri metodien keskimääräinen suoritusaika, löytyvät raportin lopusta sen valmistuttua:
+Jos tulosteen erikoismerkit kuten &thickapprox; ja <sup>-4</sup> eivät näy kunnolla Windowsissa, voit kokeilla vaihtaa terminaalin merkistöksi utf-8:n komennolla `chcp 65001`. [Lisätietoja](https://www.google.com/search?q=chcp+65001).
+
+`BenchmarkRunner` suorittaa joukon suorituskykytestejä [JMH-työkalulla](https://github.com/openjdk/jmh) ja tulostaa tietoa testien edistymisestä. Suorituskykytesti koostuu sekä lämmittelyvaiheesta että metodien toistuvista kutsuista. Lämmittelyvaihe on tärkeä, jotta kaikki tarvittavat komponentit on saatu ladattua ja laitteistolta tarvittavat resurssit varattua ennen varsinaista mittausta. Testien tulos, eli eri metodien keskimääräinen suoritusaika, löytyvät raportin lopusta sen valmistuttua:
 
 ```
 Benchmark                                           Mode  Cnt   Score    Error  Units
@@ -45,7 +47,7 @@ LinkedListPerformance.accessLinkedListWithIndex     avgt    5   2.786 ±  0.131 
 LinkedListPerformance.accessLinkedListWithIterator  avgt    5  ≈ 10⁻⁴            s/op
 ```
 
-Tarkemman selityksen yllä suoritetuista testeistä löydät seuraavista kappaleista.
+Yllä *"avgt"* tarkoittaa *"average time"*. *"Cnt"* tarkoittaa suorituskertojen määrää ja *"score"* tarkoittaa metodin suorituskerran keskimääräistä kestoa. *"s/op"* puolestaan on yksikkö, eli sekuntia per metodin suoritus. Tarkemman selityksen suoritetuista metodeista löydät seuraavista kappaleista.
 
 
 ### Haku listalta indeksin avulla (*accessArrayListWithIndex* ja *accessLinkedListWithIndex*)
@@ -81,7 +83,7 @@ public void accessLinkedListWithIndex() {
 }
 ```
 
-Kuten testin tuloksista huomataan, koodi, jossa käydään [noin 93&nbsp;086 sanan pituinen aineisto](./data/kaikkisanat.txt) läpi yksi kerrallaan indeksien avulla vie `ArrayList`-listalta keskimäärin 10⁻⁴ eli **0.0001 sekuntia**. `LinkedList`-tyyppiseltä listalta sama läpikäynti vie keskimäärin peräti **2.837 sekuntia**, eli lähes 30&nbsp;000 kertaa kauemmin:
+Kuten testin tuloksista huomataan, koodi, jossa käydään [noin 93&nbsp;086 sanan pituinen aineisto](./data/kaikkisanat.txt) läpi yksi kerrallaan indeksien avulla vie `ArrayList`-listalta keskimäärin 10<sup>-4</sup> eli **0.0001 sekuntia**. `LinkedList`-tyyppiseltä listalta sama läpikäynti vie keskimäärin peräti **2.837 sekuntia**, eli lähes 30&nbsp;000 kertaa kauemmin:
 
 ```
 Benchmark                                           Mode  Cnt   Score    Error  Units
@@ -150,7 +152,7 @@ public void accessLinkedListWithIterator() {
 }
 ```
 
-Tässä tapauksessa listojen suorituskyvyssä ei ole havaittavissa eroavaisuuksia suorituskykytestien perusteella. Molempien metodien suoritusaika on noin 10⁻⁴ eli 0,0001 sekuntia:
+Tässä tapauksessa listojen suorituskyvyssä ei ole havaittavissa eroavaisuuksia suorituskykytestien perusteella. Molempien metodien suoritusaika on noin 10<sup>-4</sup> eli 0,0001 sekuntia:
 
 ```
 Benchmark                                           Mode  Cnt   Score    Error  Units
