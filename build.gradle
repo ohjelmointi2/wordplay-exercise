@@ -16,33 +16,37 @@ java {
     targetCompatibility = 17
 }
 
+compileJava {
+    options.encoding = "UTF-8"
+}
+
+compileTestJava {
+    options.encoding = "UTF-8"
+}
+
 repositories {
-    // Use Maven Central for resolving dependencies.
     mavenCentral()
 }
 
 dependencies {
-    // Use JUnit Jupiter for testing.
-    testImplementation 'org.junit.jupiter:junit-jupiter:5.9.1'
+    implementation "org.openjdk.jmh:jmh-core:1.36"
+    annotationProcessor "org.openjdk.jmh:jmh-generator-annprocess:1.36"
 
-    // This dependency is used by the application.
-    implementation 'com.google.guava:guava:31.1-jre'
+    testImplementation("org.junit.jupiter:junit-jupiter:5.10.1")
+    testRuntimeOnly("org.junit.platform:junit-platform-launcher:1.10.1")
 }
 
 application {
     // Define the main class for the application.
-    mainClass = 'wordplay.App'
+    mainClass = 'wordplay.benchmark.BenchmarkRunner'
 }
 
 tasks.named('test') {
-    // Use JUnit Platform for unit tests.
     useJUnitPlatform()
 
     testLogging {
-        showExceptions true
-        showCauses true
-        events "PASSED", "FAILED"
-        showStandardStreams true
+        events "passed", "skipped", "failed"
+        exceptionFormat "full"
     }
 }
 

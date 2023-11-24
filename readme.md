@@ -1,26 +1,26 @@
-# Wordplay - etsi etunimet sanakirjasta
+# Wordplay-tuntiharjoitus
 
-Tämän tehtävän tarkoituksena on soveltaa kurssilla opettuja aiheita mm. perinnän, tietorakenteiden ja algoritmien tiimoilta.
+Tämän harjoituksen tarkoituksena on perehtyä erilaisiin ennalta tuttuihin tietorakenteisiin ja algoritmeihin ja perehtyä syvällisemmin siihen, miten ne toimivat.
 
-Tehtävässä kehitettävän sovelluksen tarkoituksena on hyödyntää avointa nimi- ja sanakirja-aineistoa ja etsiä sellaisia etunimiä, joilla on nimen lisäksi myös jokin merkitys sanakirjassa. Tällaisia nimiä ovat esimerkiksi Tuuli ja Onni.
+Harjoituksessa kehitettävä sovellus hyödyntää avointa nimi- ja sanakirja-aineistoa ja etsii mm. sellaisia etunimiä, joilla on nimen lisäksi myös jokin merkitys sanakirjassa. Tällaisia nimiä ovat esimerkiksi *Tuuli* ja *Onni*.
 
-Tehtävä koostuu useammasta osasta, jotka arvioidaan erikseen. Ensimmäiset kaksi osaa tarkastetaan [yksikkötesteillä](./src/test/java/wordplay/), kun taas kaksi jälkimmäistä testataan suorittamalla ohjelmaasi.
+💡 *Tätä tehtävää ei erikseen palauteta eikä arvioida, joten sitä varten ei ole GitHub classroom -linkkiä. Voit luoda tehtävästä oman kopion joko "use this template"- tai "fork"-toiminnoilla.*
 
 
-## Tehtävässä käytettävä data
+## Harjoituksessa käytettävä data
 
-Tässä tehtävässä ohjelmasi tarvitsee suoritukseen useita tiedostoja, jotka ovat hieman poikkeavissa muodoissa: sanakirjan sisältö on raakatekstinä, kun taas nimiaineisto on csv-muodossa.
+Tämän harjoituksen Java-ohjelma hyödyntää useita tiedostoja, jotka ovat hieman poikkeavissa muodoissa: sanakirjan sisältö on raakatekstinä, kun taas nimiaineisto on csv-muodossa.
 
 [`data/kaikkisanat.txt`](./data/kaikkisanat.txt) sisältää suomenkielisiä sanoja raakatekstinä aakkosjärjestyksessä kun taas etunimitiedostot [`etunimitilasto-naiset-ensimmainen.csv`](./data/etunimitilasto-naiset-ensimmainen.csv) sekä [`etunimitilasto-miehet-ensimmainen.csv`](./data/etunimitilasto-miehet-ensimmainen.csv) sisältävät etunimiä sekä niiden lukumääriä [CSV-muodossa](https://fi.wikipedia.org/wiki/CSV).
 
-💡 *Huom! Et saa tämän tehtävän puitteissa tehdä muutoksia näihin tiedostoihin.*
+Tiedot tiedostojen tekijänoikeuksista ja käyttöehdoista tältä sivulta kohdasta [Tekijänoikeudet](#tekijänoikeudet).
 
-💡 *Huom! Kaikki tämän tehtävän tiedostot on tallennettu [`UTF-8`-merkistökoodauksella](https://en.wikipedia.org/wiki/UTF-8). `UTF-8` on tänä päivänä yleisin merkistökoodaus, mutta erityisesti Windows-ympäristössä järjestelmäsi saattaa käyttää jotain muuta merkistöä. [Lisätietoja merkistöistä (baeldung.com)](https://www.baeldung.com/java-char-encoding).*
+💡 *Huom! Kaikki tämän harjoituksen tiedostot on tallennettu [`UTF-8`-merkistökoodauksella](https://en.wikipedia.org/wiki/UTF-8). `UTF-8` on tänä päivänä yleisin merkistökoodaus, mutta erityisesti Windows-ympäristössä järjestelmäsi saattaa käyttää jotain muuta merkistöä. [Lisätietoja merkistöistä (baeldung.com)](https://www.baeldung.com/java-char-encoding).*
 
 
 ## Ohjelman rakenne
 
-Koska tiedostoja on kahta eri tyyppiä, tähän sovellukseen toteutetaan kaksi luokkaa niiden lukemiseksi: [DictionaryReader](./src/main/java/wordplay/DictionaryReader.java) ja [NamesReader](./src/main/java/wordplay/NamesReader.java). Molemmat luokat toteuttavat [Reader](./src/main/java/wordplay/Reader.java)-rajapinnan, jossa on määritettynä `readFile`-metodi:
+Koska tiedostoja on kahta eri tyyppiä, projektiin on toteutettu kaksi erillistä luokkaa niiden lukemiseksi: [DictionaryReader](./src/main/java/wordplay/io/DictionaryReader.java) ja [NamesReader](./src/main/java/wordplay/io/NamesReader.java). Molemmat luokat toteuttavat [WordplayReader](./src/main/java/wordplay/io/WordplayReader.java)-rajapinnan, jossa on määritettynä `readFile`-metodi:
 
 ```mermaid
 classDiagram
@@ -32,29 +32,25 @@ classDiagram
 
     class DictionaryReader {
         +readFile(Path file)
+        readFinnishWords()
     }
 
     class NamesReader {
         +readFile(Path file)
     }
 
-    class Reader {
+    class WordplayReader {
         +readFile(Path file)
     }
 
-    App --> Reader : uses
-    Reader <-- DictionaryReader: implements
-    Reader <-- NamesReader : implements
+    App --> WordplayReader : uses
+    WordplayReader <-- DictionaryReader: implements
+    WordplayReader <-- NamesReader : implements
 ```
 
-Saat halutessasi luoda myös muita luokkia ja -metodeja. Huomaa kuitenkin, että automaattisten testien vuoksi tehtävänannossa määrätyt luokat ja metodit tulee toteuttaa ohjeiden mukaisesti.
-
-💡 *Vinkki: luokkien toteutuksessa saatat tarvita Javan [Files](https://docs.oracle.com/javase/9/docs/api/java/nio/file/Files.html)- sekä [Path](https://docs.oracle.com/javase/9/docs/api/java/nio/file/Path.html)-luokkia.*
+## Osa 1: `ArrayList` ja `LinkedList`
 
 
-## Poikkeusten käsittely
-
-Tiedostoja lukiessa saattaa syntyä [ajonaikaisia poikkeuksia](https://www.baeldung.com/java-checked-unchecked-exceptions). Tehtävän `Reader`-rajapinnassa ei ole määritetty tarkastettua poikkeusta, joten toteuttamasi metodit eivät saa myöskään heittää tarkastettua poikkeusta (esim. `throws IOException`). Virhe tulee käsitellä omassa metodissasi, joka voi virhetilanteessa esimerkiksi palauttaa tyhjän listan ja kirjoittaa virheilmoituksen `System.err`-tietovirtaan.
 
 
 ## Osa 1: sanakirjan sisällön lukeminen *(perusteet, 30 %)*
@@ -99,7 +95,7 @@ Leena;27 745
 
 Ratkaisusi tulee toimia vastaavasti myös muiden samanmuotoisten tiedostojen kanssa, kuten [`etunimitilasto-miehet-ensimmainen.csv`](./data/etunimitilasto-miehet-ensimmainen.csv).
 
-Voit halutessasi tehdä oman main-metodin, jossa kokeilet kirjoittamasi koodin toimivuutta. Voit myös hyödyntää valmista JUnit-testiä [NamesReaderTest](./src/test/java/wordplay/NamesReaderTest.java), joka löytyy tehtäväpohjasta ja jolla ratkaisusi tarkastetaan palautuksen jälkeen. Voit suorittaa testin joko koodieditorisi käyttöliittymän kautta tai komennolla:
+Voit halutessasi tehdä oman main-metodin, jossa kokeilet kirjoittamasi koodin toimivuutta. Voit myös hyödyntää valmista JUnit-testiä [NamesReaderTest](./src/test/java/wordplay/NamesReaderTest.java), joka löytyy projektipohjasta ja jolla ratkaisusi tarkastetaan palautuksen jälkeen. Voit suorittaa testin joko koodieditorisi käyttöliittymän kautta tai komennolla:
 
 ```
 ./gradlew test --tests NamesReaderTest      # unix
@@ -155,7 +151,7 @@ java -jar build/libs/wordplay-exercise.jar  # unix
 java -jar build\libs\wordplay-exercise.jar  # windows
 ```
 
-Kopioi lopuksi `wordplay-exercise.jar`-tiedostosi projektin päähakemistoon, eli samaan hakemistoon, jossa tämä `readme.md` sijaitsee. Lisää tiedosto myös versionhallintaan `git add`- ja `git commit`-komennoilla, jotta se huomioidaan tehtävän arvioinnissa.
+Kopioi lopuksi `wordplay-exercise.jar`-tiedostosi projektin päähakemistoon, eli samaan hakemistoon, jossa tämä `readme.md` sijaitsee. Lisää tiedosto myös versionhallintaan `git add`- ja `git commit`-komennoilla, jotta se huomioidaan harjoituksen arvioinnissa.
 
 💡 *Huom! `java -jar`-komento tulee suorittaa projektin päähakemistossa, jotta ohjelma löytää luettavat csv- ja txt-tiedostot.*
 
@@ -164,7 +160,7 @@ Kopioi lopuksi `wordplay-exercise.jar`-tiedostosi projektin päähakemistoon, el
 
 ## Kotimaisten kielten keskuksen nykysuomen sanalista
 
-Tehtävässä hyödynnetään [Kotimaisten kielten keskuksen nykysuomen sanalistaa](https://kaino.kotus.fi/sanat/nykysuomi/):
+Harjoituksessa hyödynnetään [Kotimaisten kielten keskuksen nykysuomen sanalistaa](https://kaino.kotus.fi/sanat/nykysuomi/):
 
 > *"Kotimaisten kielten keskus julkaisee taivutustiedoin täydennetyn nykysuomen sanalistan. Sanalista ei ole tyhjentävä tai auktoritatiivinen luettelo suomen kielen sanoista, vaan sen on tarkoitus mm. toimia apuvälineenä suomen kieltä käsittelevien tietokoneohjelmien ja suomenkielisten käyttöliittymien kehitystyössä. Sanalista perustuu pääosin CD-Perussanakirjan sanastoon."*
 >
@@ -174,7 +170,7 @@ Tehtävässä hyödynnetään [Kotimaisten kielten keskuksen nykysuomen sanalist
 
 [GNU LGPL -lisenssi](http://www.gnu.org/licenses/lgpl.html), [EUPL v.1.1 -lisenssi](http://joinup.ec.europa.eu/software/page/eupl/licence-eupl), [Creative Commons Nimeä 3.0 -lisenssi](http://creativecommons.org/licenses/by/3.0/deed.fi)
 
-Tehtävässä hyödynnetty muokattu versio, jossa XML:n sijasta sanat ovat raakatekstinä, on lainattu [Hugo van Kemenaden](https://github.com/hugovk) GitHub-projektista [Every Finnish Word](https://github.com/hugovk/everyfinnishword).
+Harjoituksessa hyödynnetty muokattu versio, jossa XML:n sijasta sanat ovat raakatekstinä, on lainattu [Hugo van Kemenaden](https://github.com/hugovk) GitHub-projektista [Every Finnish Word](https://github.com/hugovk/everyfinnishword).
 
 
 ## Väestötietojärjestelmän suomalaisten nimiaineistot
@@ -184,8 +180,8 @@ Tehtävässä hyödynnetty muokattu versio, jossa XML:n sijasta sanat ovat raaka
 > Väestötietojärjestelmän suomalaisten nimiaineistot. https://www.avoindata.fi/data/fi/dataset/none
 
 
-## Tehtävä
+## Tämä harjoitus
 
-Tämän tehtävän on kehittänyt Teemu Havulinna ja se on lisensoitu [Creative Commons BY-NC-SA -lisenssillä](https://creativecommons.org/licenses/by-nc-sa/4.0/).
+Tämän harjoituksen on kehittänyt Teemu Havulinna ja se on lisensoitu [Creative Commons BY-NC-SA -lisenssillä](https://creativecommons.org/licenses/by-nc-sa/4.0/).
 
-Tehtävänannon, käsiteltävien tiedostojen sekä lähdekoodien toteutuksessa on hyödynnetty ChatGPT 3.5:ttä sekä GitHub copilot-tekoälyavustinta.
+Harjoituksenannon, käsiteltävien tiedostojen sekä lähdekoodien toteutuksessa on hyödynnetty ChatGPT 3.5:ttä sekä GitHub copilot -tekoälyavustinta.

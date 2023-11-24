@@ -1,4 +1,4 @@
-package wordplay;
+package wordplay.io;
 
 import java.nio.file.Path;
 import java.util.List;
@@ -13,7 +13,7 @@ import java.util.List;
  * separated by semicolons. The `readFile` method should return the data in a
  * format that is easy to use in the application.
  */
-public interface Reader {
+public interface WordplayReader {
 
     List<String> readFile(Path file);
 }
