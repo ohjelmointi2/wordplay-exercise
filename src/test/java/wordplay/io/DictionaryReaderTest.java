@@ -24,4 +24,11 @@ public class DictionaryReaderTest {
         assertEquals("aakkonen", words.get(0));
         assertEquals("öylätti", words.get(words.size() - 1));
     }
+
+    @Test
+    void testGettingFinnishWordsWithStaticMethod() {
+        List<String> finnishWords = DictionaryReader.readFinnishWords();
+
+        assertEquals(93_086, finnishWords.size());
+    }
 }

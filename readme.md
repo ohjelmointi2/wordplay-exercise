@@ -4,7 +4,7 @@ Tämän harjoituksen tarkoituksena on perehtyä erilaisiin ennalta tuttuihin tie
 
 Harjoituksessa kehitettävä sovellus hyödyntää avointa nimi- ja sanakirja-aineistoa ja etsii mm. sellaisia etunimiä, joilla on nimen lisäksi myös jokin merkitys sanakirjassa. Tällaisia nimiä ovat esimerkiksi *Tuuli* ja *Onni*.
 
-💡 *Tätä tehtävää ei erikseen palauteta eikä arvioida, joten sitä varten ei ole GitHub classroom -linkkiä. Voit luoda tehtävästä oman kopion joko "use this template"- tai "fork"-toiminnoilla.*
+💡 *Tätä harjoitusta ei erikseen palauteta eikä arvioida, joten sitä varten ei ole GitHub classroom -linkkiä. Voit luoda tehtävästä oman kopion joko "use this template"- tai "fork"-toiminnoilla.*
 
 
 ## Harjoituksessa käytettävä data
@@ -48,41 +48,156 @@ classDiagram
     WordplayReader <-- NamesReader : implements
 ```
 
-## Osa 1: `ArrayList` ja `LinkedList`
+## `ArrayList`:in ja `LinkedList`:in suorituskykytestaus
+
+Paketissa [`java.wordplay.benchmark`](./src/main/java/wordplay/benchmark/) löytyy luokkia suorituskykytestien suorittamiseksi. Suorituskykytestit havainnollistavat merkittäviä eroja `ArrayList`:in sekä `LinkedList`:in välillä, mutta niistä ilmenee myös merkittäviä suorituskykyeroja eri iterointitapojen välillä.
+
+Suorituskykytestit on toteutettu [Java Microbenchmark Harness (JMH)](https://github.com/openjdk/jmh)-työkalulla:
+
+> *"JMH is a Java harness for building, running, and analysing nano/micro/milli/macro benchmarks written in Java and other languages targeting the JVM."*
+>
+> https://github.com/openjdk/jmh
+
+Suorita suorituskykytestit joko suorittamalla [`wordplay.benchmark.BenchmarkRunner`-luokassa oleva main-metodi](./src/main/java/wordplay/benchmark/BenchmarkRunner.java) joko koodieditorillasi tai Gradlen avulla:
+
+```sh
+./gradlew run       # unix
+.\gradlew.bat run   # windows
+```
+
+### Haku listalta indeksin avulla
+
+Suorituskykytesteissä [ArrayListPerformance](./src/main/java/wordplay/benchmark/ArrayListPerformance.java) ja [LinkedListPerformance](./src/main/java/wordplay/benchmark/LinkedListPerformance.java) testataan samaa koodia sekä `ArrayList`- että `LinkedList`-tyyppisen listan kanssa:
 
 
+```java
+ArrayList<String> arrayList = new ArrayList<>(finnishWords);
+
+@Benchmark
+public void accessArrayListWithIndex() {
+    for (int i = 0; i < arrayList.size(); i++) {
+        arrayList.get(i).length();
+    }
+
+    // metodin suoritusaika on keskimäärin 0,0001 sekuntia
+}
+```
+
+```java
+LinkedList<String> linkedList = new LinkedList<>(finnishWords);
+
+@Benchmark
+public void accessLinkedListWithIndex() {
+    for (int i = 0; i < linkedList.size(); i++) {
+        linkedList.get(i).length();
+    }
+
+    // metodin suoritusaika on keskimäärin 2.837 sekuntia
+}
+```
+
+Kuten testin tuloksista huomataan, koodi, jossa käydään [noin 93&nbsp;000 sanan pituinen aineisto](./data/kaikkisanat.txt) läpi yksi kerrallaan indeksien avulla vie `ArrayList`-listalta keskimäärin 10⁻⁴ sekuntia eli 0.0001 sekuntia. `LinkedList`-tyyppiseltä listalta sama läpikäynti vie keskimäärin peräti 2.837 sekuntia, eli lähes 30&nbsp;000 kertaa kauemmin:
+
+```
+Benchmark                                           Mode  Cnt   Score    Error  Units
+ArrayListPerformance.accessArrayListWithIndex       avgt    5  ≈ 10⁻⁴            s/op
+LinkedListPerformance.accessLinkedListWithIndex     avgt    5   2.837 ±  0.276   s/op
+```
+
+Tämä vaikuttaa loogiselta, koska `ArrayList`-luokassa tietyn arvon hakeminen indeksillä edellyttää vain yhden hakuoperaation. Listan läpikäynti edellyttää siis listan pituuteen verrattavissa olevan määrän operaatioita:
+
+```java
+// listan pituuden (n) verran operaatioita:
+for (int i = 0; i < arrayList.size(); i++) {
+
+    // haku ArrayList:iltä: 1 operaatio
+    arrayList.get(i);
+}
+
+// yhteensä siis tehdään noin n * 1 operaatiota: O(n)
+```
+
+`LinkedList`-luokassa sen sijaan hakuoperaatio edellyttää listan läpikäyntiä haluttuun indeksiin asti. Esimerkiksi indeksistä 10 hakeminen vaatii siis ensin "solmujen" 0, 1, 2, ... 9 läpikäyntiä, kunnes haluttu arvo löydetään muistista. Keskimäärin siis yksittäinen hakuoperaatio noin 90&nbsp;000 pituiselta linkitetyltä listalta vaatii noin 45&nbsp;000 "linkin" seuraamista.
+
+```java
+// listan pituuden (n) verran operaatioita:
+for (int i = 0; i < linkedList.size(); i++) {
+
+    // haku LinkedListiltä vaatii keskimäärin n/2 operaatiota:
+    linkedList.get(i);
+}
+
+// yhteensä siis tehdään noin n * n/2 operaatiota: O(n²)
+```
+
+Suorituskykytesteissä mittaustarkkuus ei ole täydellinen. Operaatioiden kestot ja määrät eivät ole yhtä yksiselitteisiä kuin edellä on esitetty, mutta teorian ja kokeilun perusteella tuntuu silti luonnolliselta, että `LinkedList` suoriutui testistä **kymmeniä tuhansia kertoja** hitaammin.
+
+💡 *On myös tärkeää huomata, että aineiston määrän kasvaessa myös ero suorituskyvyssä kasvaa. Jos listassa olisi kymmenkertainen määrä alkioita, `ArrayList`:in läpikäynti veisi kymmenen kertaa enemmän aikaa. `LinkedList`:in läpikäynti puolestaan veisi arviolta sata kertaa enemmän aikaa, koska läpi käytäviä indeksejä olisi kymmenkertainen määrä, ja jokaista indeksiä kohden tehtävä haku olisi myös keskimäärin kymmenen kertaa hitaampi.*
 
 
-## Osa 1: sanakirjan sisällön lukeminen *(perusteet, 30 %)*
+### Listan iterointi
 
-Perehdy [Reader](./src/main/java/wordplay/Reader.java)-rajapintaan ja jatkokehitä [DictionaryReader](./src/main/java/wordplay/DictionaryReader.java)-luokkaa siten, että se toteuttaa kyseisen rajapinnan. DictionaryReader-luokan `readFile`-metodin tulee lukea tiedosto sille annetusta polusta ja palauttaa tiedoston sisältö pilkottuna listaksi erillisiä merkkijonoja. [Sanakirjatiedostossa](./data/kaikkisanat.txt) jokainen sana on omalla rivillään, joten käytännössä riittää, että luet tiedoston ja palautat sen rivit listana:
+Samoissa testiluokissa [ArrayListPerformance](./src/main/java/wordplay/benchmark/ArrayListPerformance.java) ja [LinkedListPerformance](./src/main/java/wordplay/benchmark/LinkedListPerformance.java) on myös toiset testimetodit, joissa sekä `ArrayList`- että `LinkedList`-tyyppisten listojen arvot käydään läpi yksi kerrallaan iteroimalla:
+
+```java
+ArrayList<String> arrayList = new ArrayList<>(finnishWords);
+
+@Benchmark
+public void accessArrayListWithIterator() {
+    for (String word : arrayList) {
+        word.length();
+    }
+
+    // metodin suoritusaika on keskimäärin 0,0001 sekuntia
+}
+```
+
+```java
+LinkedList<String> linkedList = new LinkedList<>(finnishWords);
+
+@Benchmark
+public void accessLinkedListWithIterator() {
+    for (String word : linkedList) {
+        word.length();
+    }
+
+    // metodin suoritusaika on keskimäärin 0,0001 sekuntia
+}
+```
+
+Tässä tapauksessa listojen suorituskyvyssä ei ole havaittavissa eroavaisuuksia suorituskykytestien perusteella. Molempien metodien suoritusaika on noin 10⁻⁴ eli 0,0001 sekuntia:
+
+```
+Benchmark                                           Mode  Cnt   Score    Error  Units
+ArrayListPerformance.accessArrayListWithIterator    avgt    5  ≈ 10⁻⁴            s/op
+LinkedListPerformance.accessLinkedListWithIterator  avgt    5  ≈ 10⁻⁴            s/op
+```
+
+Tässä iterointiin perustuvassa ratkaisussa `LinkedList` suoriutuu noin 30&nbsp;000 kertaa paremmin kuin edellisessä listan indekseihin perustuvassa ratkaisussa. Tämä johtuu suoraan siitä, että seuraavan arvon hakeminen linkitetyltä listalta vaatii vain yhden operaation. Vaikka sekä indeksiin että iterointiin perustuvissa ratkaisuissa haettiin aina seuraavaa arvoa, indeksiä käytettäessä jouduttiin tekemään valtavasti ylimääräistä työtä.
+
+Sekä `ArrayList`:in että `LinkedList`:in suorituskyky on siis laskennallisesti sama, kun listaa iteroidaan:
+
+```java
+// n kappaletta sanoja, kukin vaatii vain yhden operaation:
+for (String word : list) {
+    word.length();
+}
+```
+
+
+## Harjoitustehtävä
+
+Tässä Git-repositoriossa on tiedosto [data/kaikkisanat.txt](./data/kaikkisanat.txt), joka sisältää [Kotimaisten kielten keskuksen nykysuomen sanalistan](https://kaino.kotus.fi/sanat/nykysuomi/):
 
 ```
 aakkonen
 aakkosellinen
 aakkosellisesti
 aakkosellisuus
+...
 ```
 
-Voit halutessasi tehdä oman main-metodin, jossa kokeilet kirjoittamasi koodin toimivuutta. Voit myös hyödyntää valmista JUnit-testiä [DictionaryReaderTest](./src/test/java/wordplay/DictionaryReaderTest.java). Voit suorittaa testin joko koodieditorisi käyttöliittymän kautta tai Gradlen avulla komennolla:
-
-```
-./gradlew test --tests DictionaryReaderTest      # unix
-gradlew.bat test --tests DictionaryReaderTest    # windows
-```
-
-💡 *Jos Gradle-testi ei mene läpi, kokeile suorittaa komento uudestaan siten, että lisäät loppuun argumentin `--info`. Näin saat tarkemman tiedon siitä, mikä testissä meni pieleen. Gradlen tulosteessa kerrotaan myös HTML-muotoisen testiraportin sijainti, josta voit lukea tarkempia tietoja testien tuloksista.*
-
-💡 *Sinun ei vielä tässä vaiheessa tarvitse perehtyä varsinaisen testin tekniseen toteutukseen. Tässä vaiheessa riittää, että suoritat testin ja tutustut sen mahdollisesti tuottamiin virheilmoituksiin.*
-
-
-## Osa 2: nimitiedostojen sisällön lukeminen *(perusteet, 30 %)*
-
-Seuraavaksi toteuta [NamesReader](./src/main/java/wordplay/NamesReader.java)-luokka siten, että myös se toteuttaa [Reader](./src/main/java/wordplay/Reader.java)-rajapinnan.
-
-Tämän luokan tulee osata lukea tiedosto, kuten [`etunimitilasto-naiset-ensimmainen.csv`](./data/etunimitilasto-naiset-ensimmainen.csv) ja palauttaa listan kyseisen tiedoston sisältämistä nimistä, esim. `["Anne", "Tuula", "Päivi", "Anna", "Leena"]`.
-
-[Digi- ja väestötietoviraston nimiaineistoissa](https://www.avoindata.fi/data/fi/organization/digi_ja_vaestotietovirasto) on ensimmäisellä rivillä otsikot ja jokaisella datarivillä nimen lisäksi lukumäärä, joita ei saa olla mukana palautettavalla listalla:
+Repositorio sisältää myös tiedostot [data/etunimitilasto-naiset-ensimmainen.csv](./data/etunimitilasto-naiset-ensimmainen.csv) sekä [data/etunimitilasto-miehet-ensimmainen.csv](./data/etunimitilasto-miehet-ensimmainen.csv), joista löytyy [Digi- ja väestötietoviraston nimiaineistoissa](https://www.avoindata.fi/data/fi/organization/digi_ja_vaestotietovirasto) esiintyvät etunimet sekä niiden lukumäärät:
 
 ```
 Etunimi;Lukumäärä
@@ -91,70 +206,37 @@ Tuula;30 113
 Päivi;29 789
 Anna;28 677
 Leena;27 745
+...
 ```
 
 Ratkaisusi tulee toimia vastaavasti myös muiden samanmuotoisten tiedostojen kanssa, kuten [`etunimitilasto-miehet-ensimmainen.csv`](./data/etunimitilasto-miehet-ensimmainen.csv).
 
-Voit halutessasi tehdä oman main-metodin, jossa kokeilet kirjoittamasi koodin toimivuutta. Voit myös hyödyntää valmista JUnit-testiä [NamesReaderTest](./src/test/java/wordplay/NamesReaderTest.java), joka löytyy projektipohjasta ja jolla ratkaisusi tarkastetaan palautuksen jälkeen. Voit suorittaa testin joko koodieditorisi käyttöliittymän kautta tai komennolla:
+Näiden tiedostojen lukemiseksi on olemassa valmiit metodit [`NamesReader.readFirstNames()`](./src/main/java/wordplay/io/NamesReader.java) sekä [`DictionaryReader.readFinnishWords()`](./src/main/java/wordplay/io/DictionaryReader.java), joita voit käyttää seuraavasti:
 
-```
-./gradlew test --tests NamesReaderTest      # unix
-gradlew.bat test --tests NamesReaderTest    # windows
-```
-
-
-## Osa 3: pääohjelma ja nimien etsiminen sanakirjasta *(perusteet, 30 %)*
-
-Molemmat luokkasi toimivat ja läpäisevät niille kirjoitetut testit, on aika toteuttaa varsinainen pääohjelma. Pääohjelma kirjoitetaan [`App.java`](./src/main/java/wordplay/App.java)-luokkaan.
-
-Pääohjelmasi tulee hyödyntää edellä mainittuja `DictionaryReader`- ja `NamesReader`-luokkia lukeakseen miesten ja naisten etunimet sekä sanakirjan. Tämän jälkeen ohjelman tulee tarkastaa, mitkä etunimet löytyvät sanakirjasta ja tulostaa ne aakkosjärjestyksessä. Et saa tulostaa nimiä, jotka löytyvät vain osana jotain sanaa. Esimerkiksi nimi *Ran* löytyy osana sanoja, kuten "bume**ran**gi" ja "deodo**ran**tti", mutta ei sellaisenaan.
-
-Voit suorittaa pääohjelman joko koodieditorisi käyttöliittymän kautta tai komennolla:
-
-```
-./gradlew run       # unix
-gradlew.bat run     # windows
+```java
+List<String> finnishNames = NamesReader.readFirstNames();
+List<String> finnishWords = DictionaryReader.readFinnishWords();
 ```
 
-Gradle osaa suorittaa `run`-komennolla oikean pääohjelman, koska `wordplay.App` on määritetty [build.gradle](./build.gradle)-tiedostossa pääohjelmaksi.
+Tässä tuntitehtävässä sinun tulee toteuttaa [`NamesInDictionary`-luokkaan](./src/main/java/wordplay/NamesInDictionary.java) `main`-metodi, joka käy molemmat aineistot läpi, ja **tulostaa sellaiset suomenkieliset nimet, jotka löytyvät myös sanakirjasta**.
 
-```groovy
-application {
-    mainClass = 'wordplay.App'
-}
-```
+Et saa tulostaa nimiä, jotka löytyvät vain osana jotain sanaa. Esimerkiksi nimi *Antti* löytyy osana sanoja kuten "elef**antti**" ja "deodor**antti**", mutta ei sellaisenaan.
+
+Voit toteuttaa ratkaisusi ensin kahdella sisäkkäisellä toistorakenteella, jossa käyt läpi molempia listoja ja vertailet niiden sanoja `equalsIgnoreCase`-metodilla. Tämä ratkaisu tulee kuitenkin olemaan melko hidas, koska jokaista nimeä (n=15&nbsp;665) kohden joudutaan käymään läpi koko sanakirja (m=93&nbsp;086). Tämä ratkaisu vaatii siis `n * m` operaatiota, joka tarkoittaa näiden aineistojen kanssa yhteensä 1&nbsp;458&nbsp;192&nbsp;190 vertailua.
+
+Vaikka tietokoneesi olisi tehokas, vie edellä esitetty "brute force"-ratkaisu todennäköisesti useita sekunteja. Jos ohjelmasi tuottaa oikean ratkaisun sekunnin kymmenesosissa, on se todennäköisesti tehokkaasti toteutettu.
+
+Kurssilla käsitellyn `HashMap`-tietorakenteen käyttäminen osana tätä ratkaisua voi olla kannattavaa. Listan `contains()`-metodi vaatii koko listan läpikäynnin, kun taas `HashMap`:in `containsKey` vaatii vain yhden operaation ([baeldung.com](https://www.baeldung.com/java-treemap-vs-hashmap)).
+
 
 💡 *Huomaa, että nimien ja sanakirjan sanojen kirjainkoko ei ole sama. Nimitiedostossa esimerkiksi `"Tuuli"` on kirjoitettu isolla alkukirjaimella, kun sanakirjassa se on kirjoitettu pienellä `"tuuli"`.*
 
-🐌 *Saatat huomata ohjelmaa suorittaessasi, että se toimii yllättävän hitaasti. Kyse ei ole todennäköisesti tietokoneesi suorituskyvystä, vaan hitaasta algoritmista.*
 
-🚀 *Mikäli ohjelma toimii hitaasti, johtuu se todennäköisesti valtavasta määrästä merkkijonojen vertailuoperaatioita. Mieti miten saat minimoitua vertailuoperaatioiden ja kirjainkokoa huomioivien operaatioiden määrän.*
+### Oikea ratkaisu
 
+Nimilistalla esiintyy 578 nimeä, jotka löytyvät myös sanakirjasta.
 
-## Osa 4: ohjelman paketointi JAR-tiedostoksi *(perusteet, 10 %)*
-
-Kun olet saanut pääohjelman toimimaan, paketoi koko ohjelma suoritettavaksi [jar-paketiksi](https://en.wikipedia.org/wiki/JAR_(file_format)).
-
-Tämä onnistuu kätevimmin Gradle-komennolla `build`:
-
-```
-./gradlew build         # unix
-gradlew.bat build       # windows
-```
-
-Build-komento kääntää Java-luokkasi, ajaa testit ja luo JAR-paketin, joka sijaitsee hakemistossa [build/libs](./build/libs/).
-
-Kokeile suorittaa jar-paketti komennolla:
-
-```
-java -jar build/libs/wordplay-exercise.jar  # unix
-java -jar build\libs\wordplay-exercise.jar  # windows
-```
-
-Kopioi lopuksi `wordplay-exercise.jar`-tiedostosi projektin päähakemistoon, eli samaan hakemistoon, jossa tämä `readme.md` sijaitsee. Lisää tiedosto myös versionhallintaan `git add`- ja `git commit`-komennoilla, jotta se huomioidaan harjoituksen arvioinnissa.
-
-💡 *Huom! `java -jar`-komento tulee suorittaa projektin päähakemistossa, jotta ohjelma löytää luettavat csv- ja txt-tiedostot.*
-
+💡 *75 sanakirjasta löytyvää nimeä esiintyy nimiaineistossa kahdesti, koska esimerkiksi nimet "Usva", "Ruska" ja "Tuisku" esiintyvät sekä miesten että naisten etunimissä.*
 
 # Tekijänoikeudet
 

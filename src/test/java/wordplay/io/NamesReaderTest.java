@@ -25,4 +25,13 @@ public class NamesReaderTest {
         String last = names.get(names.size() - 1);
         assertEquals("Åsa-Maria", last, "Last name in the file should be Åsa-Maria");
     }
+
+    @Test
+    void testReadingBothFemaleAndMaleNamesAtOnce() {
+        List<String> finnishNames = NamesReader.readFirstNames();
+
+        assertEquals(15_665, finnishNames.size());
+        assertEquals("Anne", finnishNames.get(0));
+        assertEquals("Änäs", finnishNames.get(finnishNames.size() - 1));
+    }
 }
