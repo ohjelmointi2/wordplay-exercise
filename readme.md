@@ -91,10 +91,10 @@ ArrayListPerformance.accessArrayListWithIndex       avgt    5  ≈ 10⁻⁴     
 LinkedListPerformance.accessLinkedListWithIndex     avgt    5   2.837 ±  0.276   s/op
 ```
 
-`ArrayList`-luokassa tietyn arvon hakeminen indeksillä edellyttää vain yhden hakuoperaation, koska se hyödyntää sisäisesti taulukkoa. Listan kaikkien arvojen läpikäynti edellyttää siis saman verran operaatioita, kuin listalla on pituutta:
+`ArrayList`-luokassa tietyn arvon hakeminen indeksillä edellyttää vain yhden hakuoperaation, [koska se hyödyntää sisäisesti taulukkoa](https://github.com/openjdk/jdk/blob/6aa197667ad05bd93adf3afc7b06adbfb2b18a22/src/java.base/share/classes/java/util/ArrayList.java#L133-L139). Listan kaikkien arvojen läpikäynti edellyttää siis vain saman verran operaatioita, kuin listalla on pituutta:
 
 ```java
-// listan pituuden (n) verran operaatioita:
+// toistetaan listan pituuden verran (n kpl):
 for (int i = 0; i < arrayList.size(); i++) {
 
     // haku taulukosta vaatii vain 1 operaation
@@ -104,27 +104,27 @@ for (int i = 0; i < arrayList.size(); i++) {
 // yhteensä siis tehdään n * 1 operaatiota: O(n)
 ```
 
-`LinkedList`-luokassa puolestaan alkiot ovat "peräkkäin" ja yksittäisen arvon hakeminen keskeltä edellyttää kaikkien sitä edeltävien arvojen läpikäyntiä haluttuun indeksiin asti. Esimerkiksi indeksistä 10 hakeminen vaatii siis ensin "linkkien" 0, 1, 2, ... 9 läpikäyntiä. Jokainen yksittäinen hakuoperaatio noin 90&nbsp;000 pituiselta linkitetyltä listalta vaatii siis keskimäärin noin 45&nbsp;000 "linkin" läpikäyntiä.
+`LinkedList`-luokassa puolestaan alkiot ovat "peräkkäin" ja yksittäisen arvon hakeminen keskeltä [edellyttää kaikkien sitä edeltävien arvojen läpikäyntiä joko alusta tai lopusta haluttuun indeksiin asti](https://github.com/openjdk/jdk/blob/6aa197667ad05bd93adf3afc7b06adbfb2b18a22/src/java.base/share/classes/java/util/LinkedList.java#L574-L591). Esimerkiksi indeksistä 10 hakeminen linkitetyltälistalta vaatii siis ensin "linkkien" 0, 1, 2, ... 9 läpikäyntiä, jos lähdetään liikkeelle listan alusta. Koska Javan linkitettyä listaa voidaan käydä läpi joko alusta loppuun tai lopusta alkuun, on jokaisen listalla olevan indeksin keskimääräinen etäisyys lähtöpisteestä 1/4 listan pituudesta. Hakuoperaatio 90&nbsp;000 sanan pituiselta listaltamme vaatii siis keskimäärin noin 22&nbsp;500 "linkin" läpikäyntiä.
 
 ```java
 // listan pituuden (n) verran operaatioita:
 for (int i = 0; i < linkedList.size(); i++) {
 
-    // jokainen `get`-kutsu vaatii keskimäärin n/2 operaatiota:
+    // jokainen `get`-kutsu vaatii keskimäärin n/4 operaatiota:
     linkedList.get(i);
 }
 
-// yhteensä siis tehdään noin n * n/2 operaatiota: O(n²)
+// yhteensä siis tehdään noin n * n/4 operaatiota: O(n²)
 ```
 
-Suorituskykytesteissä ja tehokkuutta arvioitaessa mittaustarkkuus ei ole täydellinen, eikä siihen oikeastaan tarvitse edes pyrkiä. Operaatioiden kestot ja määrät eivät ole yhtä yksiselitteisiä kuin edellä on esitetty, mutta teorian ja kokeilun perusteella tuntuu silti luonnolliselta, että `LinkedList` suoriutui testistä **kymmeniä tuhansia kertoja** hitaammin kuin `ArrayList`.
+Suorituskykytesteissä ja tehokkuutta arvioitaessa mittaustarkkuus ei ole täydellinen, eikä siihen oikeastaan tarvitse edes pyrkiä. Siksi `n * n/4` esitetään tyypillisesti muodossa <code>n<sup>2</sup></code> Operaatioiden kestot ja määrät eivät ole yhtä yksiselitteisiä kuin edellä on esitetty, mutta teorian ja suorituskykytestin perusteella tuntuu silti luonnolliselta, että `LinkedList` suoriutui testistä **kymmeniä tuhansia kertoja** hitaammin kuin `ArrayList`.
 
 💡 *On myös tärkeää huomata, että aineiston määrän kasvaessa myös ero suorituskyvyssä kasvaa. Jos listassa olisi kymmenkertainen määrä alkioita, `ArrayList`:in läpikäynti veisi kymmenen kertaa enemmän aikaa. `LinkedList`:in läpikäynti puolestaan veisi arviolta sata kertaa enemmän aikaa, koska läpi käytäviä indeksejä olisi kymmenkertainen määrä, ja lisäksi jokaista indeksiä kohden tehtävä haku olisi myös keskimäärin kymmenen kertaa nykyistä hitaampi.*
 
 
 ### Listan iterointi (*accessArrayListWithIterator* ja *accessLinkedListWithIterator*)
 
-Samoissa testiluokissa [`ArrayListPerformance`](./src/main/java/wordplay/benchmark/ArrayListPerformance.java) ja [`LinkedListPerformance`](./src/main/java/wordplay/benchmark/LinkedListPerformance.java) on myös toiset testimetodit, joissa sekä `ArrayList`- että `LinkedList`-tyyppisten listojen arvot käydään läpi yksi kerrallaan *iteroimalla*:
+Samoissa suorituskykytestiluokissa [`ArrayListPerformance`](./src/main/java/wordplay/benchmark/ArrayListPerformance.java) ja [`LinkedListPerformance`](./src/main/java/wordplay/benchmark/LinkedListPerformance.java) on myös toiset testimetodit, joissa sekä `ArrayList`- että `LinkedList`-tyyppisten listojen arvot käydään läpi yksi kerrallaan *iteroimalla*:
 
 ```java
 ArrayList<String> arrayList = new ArrayList<>(finnishWords);
@@ -172,6 +172,10 @@ for (String word : list) {
 
 // Suorituskyky on O(n)
 ```
+
+### Pohdittavaa
+
+Vaikka `ArrayList` näyttää edellä esitettyjen tietojen valossa olevan ylivertainen `LinkedList`:iin verrattuna, ei asia ole suinkaan niin yksiselitteinen. `ArrayList` suoriutuu erittäin huonosti tilanteista, joissa listan keskelle lisätään arvoja. Tällaisissa tilanteissa kohdeindeksin jälkeiset arvot joudutaan [kopioimaan listan taustalla olevassa taulukossa eteenpäin](https://github.com/openjdk/jdk/blob/6aa197667ad05bd93adf3afc7b06adbfb2b18a22/src/java.base/share/classes/java/util/ArrayList.java#L501-L522), mikä tarkoittaa pahimmassa tapauksessa koko taulukon sisällön kopiointia yhden pykälän eteenpäin. Vastaavasti `ArrayList`:in taustalla olevan taulukon täyttyessä se joudutaan korvaamaan uudella, suuremmalla taulukolla, mikä on myös suorituskyvyn kannalta raskas operaatio.
 
 
 ## Harjoitustehtävä
