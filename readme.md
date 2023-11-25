@@ -120,7 +120,9 @@ for (int i = 0; i < linkedList.size(); i++) {
 // yhteensä siis tehdään noin n * n/4 operaatiota: O(n²)
 ```
 
-Suorituskykytesteissä ja tehokkuutta arvioitaessa mittaustarkkuus ei ole täydellinen, eikä siihen oikeastaan tarvitse edes pyrkiä. Algoritmi, jonka suoritusajan suhde tietojoukon kokoon on `n * n/4` käyttäytyy samalla tavalla tietojoukon kokoon nähden kuin algoritmi, jonka suhde on `n * n` (<code>n<sup>2</sup></code>). Operaatioiden kestot ja määrät eivät ole niin yksiselitteisiä kuin edellä on esitetty, mutta teorian ja suorituskykytestien perusteella vaikuttaa vahvasti siltä, että `LinkedList` suoriutui testistä tällä tietoaineistolla **kymmeniä tuhansia kertoja** hitaammin kuin `ArrayList`.
+Suorituskykytesteissä ja tehokkuutta arvioitaessa mittaustarkkuus ei ole täydellinen, eikä siihen oikeastaan tarvitse edes pyrkiä. Oleellisempaa on ymmärtää, miten algoritmi suoriutuu suhteessa sen käsittelemän tietojoukon kokoon. Algoritmi, jonka suorittamien operaatioiden suhde tietojoukon kokoon on `n * n/4`, skaalautuu yhtä huonosti kuin algoritmi, jonka suhde on `n * n` eli <code>n<sup>2</sup></code>.
+
+Operaatioiden kestot ja määrät eivät ole niin yksiselitteisiä kuin edellä on esitetty, mutta teorian ja suorituskykytestien perusteella vaikuttaa vahvasti siltä, että `LinkedList` suoriutui testistä tällä suomenkielisen sanalistan sisältävällä tietoaineistolla **kymmeniä tuhansia kertoja** hitaammin kuin `ArrayList`.
 
 💡 *On myös tärkeää huomata, että aineiston määrän kasvaessa myös ero suorituskyvyssä kasvaa. Jos listassa olisi kymmenkertainen määrä alkioita, `ArrayList`:in läpikäynti veisi kymmenen kertaa enemmän aikaa. `LinkedList`:in läpikäynti puolestaan veisi arviolta sata kertaa enemmän aikaa, koska läpi käytäviä indeksejä olisi kymmenkertainen määrä. Lisäksi jokaista indeksiä kohden tehtävä `get(i)`-kutsu olisi myös keskimäärin kymmenen kertaa nykyistä hitaampi.*
 
