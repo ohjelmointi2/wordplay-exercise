@@ -1,8 +1,8 @@
 # Wordplay-tuntiharjoitus
 
-Tämän harjoituksen tarkoituksena on perehtyä erilaisiin tietorakenteisiin ja algoritmeihin erityisesti niiden suorituskyvyn näkökulmasta.
+Tämän harjoituksen tarkoituksena on perehtyä erilaisiin tietorakenteisiin ja algoritmeihin erityisesti niiden suorituskyvyn näkökulmasta. Samassa sivuamme ohjelmien suorituskykytestausta ja ["asymptoottisen suoritusajan"](https://fi.wikipedia.org/wiki/Asymptoottinen_suoritusaika) käsitettä.
 
-Harjoituksessa kehitettävä sovellus hyödyntää avointa nimi- ja sanakirja-aineistoa ja etsii sellaisia suomenkielisiä etunimiä, joilla on nimen lisäksi myös jokin toinen merkitys sanakirjassa. Tällaisia nimiä ovat esimerkiksi *Tuuli* ja *Onni*.
+Harjoituksen ensimmäisessä osassa perehdytään Javan listojen suorituskykyyn. Jälkimmäisessä osassa kehitettävä sovellus hyödyntää avointa nimi- ja sanakirja-aineistoa ja etsii sellaisia suomenkielisiä etunimiä, joilla on nimen lisäksi myös jokin toinen merkitys sanakirjassa. Tällaisia nimiä ovat esimerkiksi *Tuuli* ja *Onni*.
 
 💡 *Tätä harjoitusta ei erikseen palauteta eikä arvioida, joten sitä varten ei ole GitHub classroom -linkkiä. Voit luoda tehtävästä oman kopion joko "use this template"- tai "fork"-toiminnoilla.*
 
@@ -11,16 +11,16 @@ Harjoituksessa kehitettävä sovellus hyödyntää avointa nimi- ja sanakirja-ai
 
 Tämän harjoituksen Java-ohjelmat hyödyntävät useita tiedostoja, jotka ovat hieman poikkeavissa muodoissa: sanakirjan sisältö on raakatekstinä, kun taas nimiaineisto on csv-muodossa.
 
-[`data/kaikkisanat.txt`](./data/kaikkisanat.txt) sisältää suomenkielisiä sanoja raakatekstinä aakkosjärjestyksessä kun taas etunimitiedostot [`etunimitilasto-naiset-ensimmainen.csv`](./data/etunimitilasto-naiset-ensimmainen.csv) sekä [`etunimitilasto-miehet-ensimmainen.csv`](./data/etunimitilasto-miehet-ensimmainen.csv) sisältävät etunimiä sekä niiden lukumääriä [CSV-muodossa](https://fi.wikipedia.org/wiki/CSV).
+Tehtäväpaketin tiedosto [`kaikkisanat.txt`](./data/kaikkisanat.txt) sisältää suomenkielisiä sanoja raakatekstinä aakkosjärjestyksessä. Tiedostot [`etunimitilasto-naiset-ensimmainen.csv`](./data/etunimitilasto-naiset-ensimmainen.csv) sekä [`etunimitilasto-miehet-ensimmainen.csv`](./data/etunimitilasto-miehet-ensimmainen.csv) puolestaan sisältävät etunimiä sekä niiden lukumääriä [CSV-muodossa](https://fi.wikipedia.org/wiki/CSV).
 
-Tiedot tiedostojen tekijänoikeuksista ja käyttöehdoista tältä sivulta kohdasta [Tekijänoikeudet](#tekijänoikeudet).
+Tiedot tiedostojen tekijänoikeuksista ja käyttöehdoista löydät alempaa tältä sivulta kohdasta [Tekijänoikeudet](#tekijänoikeudet).
 
-💡 *Kaikki tämän harjoituksen tiedostot on tallennettu [`UTF-8`-merkistökoodauksella](https://en.wikipedia.org/wiki/UTF-8). `UTF-8` on tänä päivänä yleisin merkistökoodaus, mutta erityisesti Windows-ympäristössä järjestelmäsi saattaa käyttää jotain muuta merkistöä. Lisätietoja merkistöistä löydät esimerkiksi [tästä artikkelista](https://www.baeldung.com/java-char-encoding).*
+💡 *Kaikki tämän harjoituksen tiedostot on tallennettu [`UTF-8`-merkistökoodauksella](https://en.wikipedia.org/wiki/UTF-8). `UTF-8` on [yleisin merkistökoodaus](https://en.wikipedia.org/wiki/Popularity_of_text_encodings), mutta erityisesti Windows-ympäristössä järjestelmäsi saattaa käyttää jotain muuta merkistöä. Lisätietoja merkistöistä löydät esimerkiksi [tästä artikkelista](https://www.baeldung.com/java-char-encoding).*
 
 
 ## Osa 1: `ArrayList`:in ja `LinkedList`:in suorituskykytestaus
 
-Paketissa [`java.wordplay.benchmark`](./src/main/java/wordplay/benchmark/) löytyy luokkia suorituskykytestien suorittamiseksi. Suorituskykytestit havainnollistavat merkittäviä eroja `ArrayList`:in sekä `LinkedList`:in välillä, mutta niistä ilmenee myös merkittäviä suorituskykyeroja eri iterointitapojen välillä.
+Tämän repositorion paketista [`wordplay.benchmark`](./src/main/java/wordplay/benchmark/) löytyy kaksi luokkaa, jotka sisältävät suorituskykytestejä. Suorituskykytestit havainnollistavat merkittäviä eroja `ArrayList`:in sekä `LinkedList`:in välillä, mutta testeissä ilmenee myös merkittäviä eroja eri iterointitapojen välillä.
 
 Suorituskykytestit on toteutettu [Java Microbenchmark Harness (JMH)](https://github.com/openjdk/jmh)-työkalulla:
 
@@ -35,9 +35,9 @@ Suorita suorituskykytestit suorittamalla [`BenchmarkRunner`-luokka](./src/main/j
 .\gradlew.bat run  # windows
 ```
 
-Jos tulosteen erikoismerkit kuten &thickapprox; ja <sup>-4</sup> eivät näy kunnolla Windowsissa, voit kokeilla vaihtaa terminaalin merkistöksi utf-8:n komennolla `chcp 65001`. [Lisätietoja](https://www.google.com/search?q=chcp+65001).
+💡 *Jos tulosteen erikoismerkit kuten &thickapprox; ja <sup>-4</sup> eivät näy kunnolla Windowsissa, voit kokeilla [vaihtaa terminaalin merkistöksi](https://www.google.com/search?q=chcp+65001) utf-8:n komennolla `chcp 65001`.*
 
-`BenchmarkRunner` suorittaa joukon suorituskykytestejä [JMH-työkalulla](https://github.com/openjdk/jmh) ja tulostaa tietoa testien edistymisestä. Suorituskykytesti koostuu sekä lämmittelyvaiheesta että metodien toistuvista kutsuista. Lämmittelyvaihe on tärkeä, jotta kaikki tarvittavat komponentit on saatu ladattua ja laitteistolta tarvittavat resurssit varattua ennen varsinaista mittausta. Testien tulos, eli eri metodien keskimääräinen suoritusaika, löytyvät raportin lopusta sen valmistuttua:
+`BenchmarkRunner` suorittaa joukon suorituskykytestejä [JMH-työkalulla](https://github.com/openjdk/jmh) ja tulostaa tietoa testien edistymisestä. Suorituskykytestit koostuvat sekä lämmittelyvaiheesta että testattavien metodien toistuvista kutsuista. Lämmittelyvaihe on tärkeä, jotta kaikki tarvittavat komponentit on saatu ladattua ja laitteistolta tarvittavat resurssit varattua ennen varsinaista mittausta. Testien tulos, eli eri metodien keskimääräinen suoritusaika, löytyvät raportin lopusta sen valmistuttua:
 
 ```
 Benchmark                                           Mode  Cnt   Score    Error  Units
@@ -47,16 +47,17 @@ LinkedListPerformance.accessLinkedListWithIndex     avgt    5   2.786 ±  0.131 
 LinkedListPerformance.accessLinkedListWithIterator  avgt    5  ≈ 10⁻⁴            s/op
 ```
 
-Yllä *"avgt"* tarkoittaa *"average time"*. *"Cnt"* tarkoittaa suorituskertojen määrää ja *"score"* tarkoittaa metodin suorituskerran keskimääräistä kestoa. *"s/op"* puolestaan on yksikkö, eli sekuntia per metodin suoritus. Tarkemman selityksen suoritetuista metodeista löydät seuraavista kappaleista.
+Yllä *"avgt"* tarkoittaa *"average time"*. *"Cnt"* tarkoittaa suorituskertojen määrää ja *"score"* tarkoittaa testatun metodin yksittäisen suorituskerran keskimääräistä kestoa. *"s/op"* puolestaan on yksikkö, eli sekuntia per metodin suoritus. Tarkemman selityksen suoritetuista metodeista löydät seuraavista kappaleista.
 
 
 ### Haku listalta indeksin avulla (*accessArrayListWithIndex* ja *accessLinkedListWithIndex*)
 
-Suorituskykytesteissä [ArrayListPerformance](./src/main/java/wordplay/benchmark/ArrayListPerformance.java) ja [LinkedListPerformance](./src/main/java/wordplay/benchmark/LinkedListPerformance.java) testataan samaa koodia sekä `ArrayList`- että `LinkedList`-tyyppisen listan kanssa. Suorituskykytestit on *annotoitu* `@Benchmark`-annotaatiolla, jonka avulla JMH-työkalu tietää niiden olevan suorituskykytestejä:
+Luokissa [`ArrayListPerformance`](./src/main/java/wordplay/benchmark/ArrayListPerformance.java) ja [`LinkedListPerformance`](./src/main/java/wordplay/benchmark/LinkedListPerformance.java) testataan samaa koodia sekä `ArrayList`- että `LinkedList`-tyyppisen listan kanssa. Koodissa suomenkielinen sanalista käydään läpi alusta loppuun ja jokaisen sanan kohdalla kutsutaan sen `length()`-metodia.
 
+Suorituskykytestit on *annotoitu* `@Benchmark`-annotaatiolla, jonka avulla JMH-työkalu tietää niiden olevan suorituskykytestejä:
 
 ```java
-ArrayList<String> arrayList = new ArrayList<>(finnishWords);
+ArrayList<String> arrayList = new ArrayList<>(finnishWords); // 93 086 sanaa
 
 @Benchmark
 public void accessArrayListWithIndex() {
@@ -71,7 +72,7 @@ public void accessArrayListWithIndex() {
 Yllä oleva [`ArrayList`-tyyppistä listaa hyödyntävä koodi](./src/main/java/wordplay/benchmark/ArrayListPerformance.java) on lähes identtinen [alla olevan `LinkedList`-version kanssa](./src/main/java/wordplay/benchmark/LinkedListPerformance.java):
 
 ```java
-LinkedList<String> linkedList = new LinkedList<>(finnishWords);
+LinkedList<String> linkedList = new LinkedList<>(finnishWords); // 93 086 sanaa
 
 @Benchmark
 public void accessLinkedListWithIndex() {
@@ -83,7 +84,7 @@ public void accessLinkedListWithIndex() {
 }
 ```
 
-Kuten testin tuloksista huomataan, koodi, jossa käydään [noin 93&nbsp;086 sanan pituinen aineisto](./data/kaikkisanat.txt) läpi yksi kerrallaan indeksien avulla vie `ArrayList`-listalta keskimäärin 10<sup>-4</sup> eli **0.0001 sekuntia**. `LinkedList`-tyyppiseltä listalta sama läpikäynti vie keskimäärin peräti **2.837 sekuntia**, eli lähes 30&nbsp;000 kertaa kauemmin:
+Kuten testin tuloksista huomataan, koodi, jossa käydään [noin 93&nbsp;086 sanan pituinen aineisto](./data/kaikkisanat.txt) läpi yksi kerrallaan indeksien avulla vie `ArrayList`-listalta keskimäärin 10<sup>-4</sup> eli **0.0001 sekuntia**. `LinkedList`-tyyppiseltä listalta sama läpikäynti vie keskimäärin peräti **2.837 sekuntia**, eli **lähes 30&nbsp;000 kertaa kauemmin**:
 
 ```
 Benchmark                                           Mode  Cnt   Score    Error  Units
@@ -91,7 +92,7 @@ ArrayListPerformance.accessArrayListWithIndex       avgt    5  ≈ 10⁻⁴     
 LinkedListPerformance.accessLinkedListWithIndex     avgt    5   2.837 ±  0.276   s/op
 ```
 
-`ArrayList`-luokassa tietyn arvon hakeminen indeksillä edellyttää vain yhden hakuoperaation, [koska se hyödyntää sisäisesti taulukkoa](https://github.com/openjdk/jdk/blob/6aa197667ad05bd93adf3afc7b06adbfb2b18a22/src/java.base/share/classes/java/util/ArrayList.java#L133-L139). Listan kaikkien arvojen läpikäynti edellyttää siis vain saman verran operaatioita, kuin listalla on pituutta:
+`ArrayList`-tyyppisessä listassa tietyn arvon hakeminen indeksillä edellyttää vain yhden hakuoperaation, [koska se hyödyntää sisäisesti taulukkoa](https://github.com/openjdk/jdk/blob/6aa197667ad05bd93adf3afc7b06adbfb2b18a22/src/java.base/share/classes/java/util/ArrayList.java#L133-L139). Listan kaikkien arvojen läpikäynti edellyttää siis vain saman verran operaatioita, kuin listalla on pituutta:
 
 ```java
 // toistetaan listan pituuden verran (n kpl):
@@ -104,7 +105,9 @@ for (int i = 0; i < arrayList.size(); i++) {
 // yhteensä siis tehdään n * 1 operaatiota: O(n)
 ```
 
-`LinkedList`-luokassa puolestaan alkiot ovat "peräkkäin" ja yksittäisen arvon hakeminen keskeltä [edellyttää kaikkien sitä edeltävien arvojen läpikäyntiä joko alusta tai lopusta haluttuun indeksiin asti](https://github.com/openjdk/jdk/blob/6aa197667ad05bd93adf3afc7b06adbfb2b18a22/src/java.base/share/classes/java/util/LinkedList.java#L574-L591). Esimerkiksi indeksistä 10 hakeminen linkitetyltälistalta vaatii siis ensin "linkkien" 0, 1, 2, ... 9 läpikäyntiä, jos lähdetään liikkeelle listan alusta. Koska Javan linkitettyä listaa voidaan käydä läpi joko alusta loppuun tai lopusta alkuun, on jokaisen listalla olevan indeksin keskimääräinen etäisyys lähtöpisteestä 1/4 listan pituudesta. Hakuoperaatio 90&nbsp;000 sanan pituiselta listaltamme vaatii siis keskimäärin noin 22&nbsp;500 "linkin" läpikäyntiä.
+`LinkedList`-tyyppisissä listoissa alkiot ovat "peräkkäin" ja yksittäisen arvon hakeminen keskeltä [edellyttää kaikkien sitä edeltävien arvojen läpikäyntiä joko alusta tai lopusta haluttuun indeksiin asti](https://github.com/openjdk/jdk/blob/6aa197667ad05bd93adf3afc7b06adbfb2b18a22/src/java.base/share/classes/java/util/LinkedList.java#L574-L591). Esimerkiksi indeksistä 10 hakeminen linkitetyltä listalta vaatii siis ensin "linkkien/solmujen" 0, 1, 2, ... 9 läpikäyntiä, olettaen, että lähdetään liikkeelle listan alusta.
+
+Koska Javan linkitettyä listaa voidaan käydä läpi joko [alusta loppuun tai lopusta alkuun](https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/LinkedList.html), on jokaisen listalla olevan indeksin keskimääräinen etäisyys lähtöpisteestä 1/4 listan pituudesta. Hakuoperaatio 90&nbsp;000 sanan pituiselta listaltamme vaatii siis keskimäärin noin 22&nbsp;500 "linkin/solmun" läpikäyntiä.
 
 ```java
 // listan pituuden (n) verran operaatioita:
@@ -117,9 +120,9 @@ for (int i = 0; i < linkedList.size(); i++) {
 // yhteensä siis tehdään noin n * n/4 operaatiota: O(n²)
 ```
 
-Suorituskykytesteissä ja tehokkuutta arvioitaessa mittaustarkkuus ei ole täydellinen, eikä siihen oikeastaan tarvitse edes pyrkiä. Siksi `n * n/4` esitetään tyypillisesti muodossa <code>n<sup>2</sup></code> Operaatioiden kestot ja määrät eivät ole yhtä yksiselitteisiä kuin edellä on esitetty, mutta teorian ja suorituskykytestin perusteella tuntuu silti luonnolliselta, että `LinkedList` suoriutui testistä **kymmeniä tuhansia kertoja** hitaammin kuin `ArrayList`.
+Suorituskykytesteissä ja tehokkuutta arvioitaessa mittaustarkkuus ei ole täydellinen, eikä siihen oikeastaan tarvitse edes pyrkiä. Siksi `n * n/4` esitetään tyypillisesti muodossa <code>n<sup>2</sup></code>. Operaatioiden kestot ja määrät eivät ole yhtä yksiselitteisiä kuin edellä on esitetty, mutta teorian ja suorituskykytestin perusteella tuntuu silti luonnolliselta, että `LinkedList` suoriutui testistä **kymmeniä tuhansia kertoja** hitaammin kuin `ArrayList`.
 
-💡 *On myös tärkeää huomata, että aineiston määrän kasvaessa myös ero suorituskyvyssä kasvaa. Jos listassa olisi kymmenkertainen määrä alkioita, `ArrayList`:in läpikäynti veisi kymmenen kertaa enemmän aikaa. `LinkedList`:in läpikäynti puolestaan veisi arviolta sata kertaa enemmän aikaa, koska läpi käytäviä indeksejä olisi kymmenkertainen määrä, ja lisäksi jokaista indeksiä kohden tehtävä haku olisi myös keskimäärin kymmenen kertaa nykyistä hitaampi.*
+💡 *On myös tärkeää huomata, että aineiston määrän kasvaessa myös ero suorituskyvyssä kasvaa. Jos listassa olisi kymmenkertainen määrä alkioita, `ArrayList`:in läpikäynti veisi kymmenen kertaa enemmän aikaa. `LinkedList`:in läpikäynti puolestaan veisi arviolta sata kertaa enemmän aikaa, koska läpi käytäviä indeksejä olisi kymmenkertainen määrä. Lisäksi jokaista indeksiä kohden tehtävä `get(i)`-kutsu olisi myös keskimäärin kymmenen kertaa nykyistä hitaampi.*
 
 
 ### Listan iterointi (*accessArrayListWithIterator* ja *accessLinkedListWithIterator*)
@@ -160,7 +163,9 @@ ArrayListPerformance.accessArrayListWithIterator    avgt    5  ≈ 10⁻⁴     
 LinkedListPerformance.accessLinkedListWithIterator  avgt    5  ≈ 10⁻⁴            s/op
 ```
 
-Tässä iterointiin perustuvassa ratkaisussa `LinkedList` suoriutuu siis noin 30&nbsp;000 kertaa paremmin kuin edellisessä indekseihin perustuvassa `get(i)`-ratkaisussa. Tämä johtuu suoraan siitä, että seuraavan arvon hakeminen linkitetyltä listalta vaatii vain yhden operaation. Vaikka sekä indeksiin että iterointiin perustuvissa ratkaisuissa haettiin aina seuraavaa arvoa, indeksiä käytettäessä jouduttiin tekemään valtavasti ylimääräistä työtä.
+Tässä iterointiin perustuvassa ratkaisussa sama `LinkedList`-lista suoriutuu siis samasta tehtävästä noin 30&nbsp;000 kertaa paremmin kuin edellisessä indekseihin perustuvassa `get(i)`-ratkaisussa.
+
+Parempi suorituskyky johtuu siitä, että seuraavan arvon hakeminen linkitetyltä listalta vaatii vain yhden operaation. Vaikka sekä indeksiin että iterointiin perustuvissa ratkaisuissa käytiin samat arvot läpi, `get(i)`-metodia käytettäessä jouduttiin tekemään valtavasti ylimääräistä työtä.
 
 Sekä `ArrayList`:in että `LinkedList`:in suorituskyky on siis listaa iteroitaessa laskennallisesti sama:
 
@@ -177,10 +182,12 @@ for (String word : list) {
 
 Vaikka `ArrayList` näyttää edellä esitettyjen tietojen valossa olevan ylivertainen `LinkedList`:iin verrattuna, ei asia ole suinkaan niin yksiselitteinen. `ArrayList` suoriutuu erittäin huonosti tilanteista, joissa listan keskelle lisätään arvoja. Tällaisissa tilanteissa kohdeindeksin jälkeiset arvot joudutaan [kopioimaan listan taustalla olevassa taulukossa eteenpäin](https://github.com/openjdk/jdk/blob/6aa197667ad05bd93adf3afc7b06adbfb2b18a22/src/java.base/share/classes/java/util/ArrayList.java#L501-L522), mikä tarkoittaa pahimmassa tapauksessa koko taulukon sisällön kopiointia yhden pykälän eteenpäin. Vastaavasti `ArrayList`:in taustalla olevan taulukon täyttyessä se joudutaan korvaamaan uudella, suuremmalla taulukolla, mikä on myös suorituskyvyn kannalta raskas operaatio.
 
+💡 *Voit halutessasi kirjoittaa lisää suorituskykytestejä, joissa esimerkiksi kokeilet lisätä kaikki alkuperäisen listan sanat uudelle listalle alkuun, loppuun tai keskivaiheille.*
 
-## Harjoitustehtävä
 
-Tässä Git-repositoriossa on tiedosto [data/kaikkisanat.txt](./data/kaikkisanat.txt), joka sisältää [Kotimaisten kielten keskuksen nykysuomen sanalistan](https://kaino.kotus.fi/sanat/nykysuomi/):
+## Osa 2: Koodaustehtävä
+
+Tässä Git-repositoriossa on tiedosto [kaikkisanat.txt](./data/kaikkisanat.txt), joka sisältää [Kotimaisten kielten keskuksen nykysuomen sanalistan](https://kaino.kotus.fi/sanat/nykysuomi/):
 
 ```
 aakkonen
@@ -190,7 +197,7 @@ aakkosellisuus
 ...
 ```
 
-Repositorio sisältää myös tiedostot [data/etunimitilasto-naiset-ensimmainen.csv](./data/etunimitilasto-naiset-ensimmainen.csv) sekä [data/etunimitilasto-miehet-ensimmainen.csv](./data/etunimitilasto-miehet-ensimmainen.csv), joista löytyy [Digi- ja väestötietoviraston nimiaineistoissa](https://www.avoindata.fi/data/fi/organization/digi_ja_vaestotietovirasto) esiintyvät etunimet sekä niitä vastaavat lukumäärät:
+Repositorio sisältää myös tiedostot [etunimitilasto-naiset-ensimmainen.csv](./data/etunimitilasto-naiset-ensimmainen.csv) sekä [etunimitilasto-miehet-ensimmainen.csv](./data/etunimitilasto-miehet-ensimmainen.csv), joista löytyy [Digi- ja väestötietoviraston nimiaineistoissa](https://www.avoindata.fi/data/fi/organization/digi_ja_vaestotietovirasto) esiintyvät etunimet sekä niitä vastaavat lukumäärät:
 
 ```
 Etunimi;Lukumäärä
@@ -202,7 +209,7 @@ Leena;27 745
 ...
 ```
 
-Näiden tiedostojen lukemiseksi on olemassa valmiit metodit [`NamesReader.readFirstNames()`](./src/main/java/wordplay/io/NamesReader.java) sekä [`DictionaryReader.readFinnishWords()`](./src/main/java/wordplay/io/DictionaryReader.java).
+Näiden tiedostojen lukemiseksi on olemassa valmiit metodit [`NamesReader.readFirstNames()`](./src/main/java/wordplay/io/NamesReader.java) sekä [`DictionaryReader.readFinnishWords()`](./src/main/java/wordplay/io/DictionaryReader.java), jotka palauttavat tiedostojen sisällöt listoina.
 
 
 ### Ohjelman rakenne
@@ -244,11 +251,14 @@ List<String> finnishNames = NamesReader.readFirstNames();
 List<String> finnishWords = DictionaryReader.readFinnishWords();
 ```
 
-### [NamesInDictionary-luokka](./src/main/java/wordplay/NamesInDictionary.java)
+Sinun ei tarvitse toteuttaa tiedostojen käsittelyä itse, vaan voit hyödyntää edellä mainittuja metodeita.
+
+
+### [`NamesInDictionary`-luokka](./src/main/java/wordplay/NamesInDictionary.java)
 
 Tässä tehtävässä sinun tulee täydentää [`NamesInDictionary`-luokkaan](./src/main/java/wordplay/NamesInDictionary.java) `main`-metodi, joka käy molemmat edellää esitellyt aineistot läpi ja **tulostaa sellaiset suomenkieliset nimet, jotka löytyvät myös sanakirjasta**. Et saa tulostaa nimiä, jotka löytyvät ainoastaan osana jotain pidempää sanaa. Esimerkiksi nimi *Antti* löytyy osana sanoja kuten "elef*antti*" ja "deodor*antti*", mutta ei yksinään.
 
-Voit toteuttaa ratkaisusi esimerkiksi toistorakenteella sekä listan `contains()`-metodilla tai kahdella sisäkkäisellä toistolla ja `equalsIgnoreCase`-metodilla. Riippumatta kumman lähestymistavan valitset, tulee se todennäköisesti olemaan melko hidas, koska jokaista nimeä (`n=15 665`) kohden joudutaan käymään läpi koko sanakirja (`m=93 086`). Tämä ratkaisu vaatisi siis `n * m` operaatiota, joka tarkoittaa näiden aineistojen kanssa peräti 1&nbsp;458&nbsp;192&nbsp;190 vertailua.
+Voit toteuttaa ratkaisusi esimerkiksi toistorakenteella sekä listan `contains()`-metodilla. Vaihtoehtoisesti tehtävän voi ratkaista myös kahdella sisäkkäisellä toistolla ja `equalsIgnoreCase`-metodilla. Riippumatta kumman lähestymistavan valitset, tulee ratkaisu todennäköisesti olemaan melko hidas, koska jokaista nimeä (`n=15 665`) kohden joudutaan käymään läpi kaikki sanalistan sanat (`m=93 086`). Tämä ratkaisu vaatisi siis `n * m` operaatiota, joka tarkoittaa näiden aineistojen kanssa peräti 1&nbsp;458&nbsp;192&nbsp;190 vertailuoperaatiota.
 
 Vaikka tietokoneesi olisi tehokas, vie listoja läpikäyvä ja kaikkia sanoja vertaileva ["brute force"](https://en.wikipedia.org/wiki/Brute-force_search)-ratkaisu todennäköisesti useita sekunteja.
 
@@ -261,9 +271,8 @@ Kurssilla käsitellyn `HashMap`-tietorakenteen käyttäminen osana tätä ratkai
 
 ### Oikea ratkaisu
 
-Nimilistalla esiintyy 578 nimeä, jotka löytyvät myös sanakirjasta.
+Tieto sanalistasta löytyvien nimien määrästä löytyy oheisesta tiedostosta [ratkaisu.md](./ratkaisu.md).
 
-💡 *75 sanakirjasta löytyvää nimeä esiintyy nimiaineistossa kahdesti, koska esimerkiksi nimet "Usva", "Ruska" ja "Tuisku" esiintyvät sekä miesten että naisten etunimissä.*
 
 # Tekijänoikeudet
 
