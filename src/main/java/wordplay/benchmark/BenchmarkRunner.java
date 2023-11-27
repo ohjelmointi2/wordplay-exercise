@@ -5,6 +5,10 @@ import java.io.IOException;
 public class BenchmarkRunner {
 
     /**
+     * Run this class to run the benchmarks. JMH will scan the project for
+     * classes annotated with @Benchmark and run them. The results will be
+     * printed to the console.
+     *
      * See the Java Microbenchmark Harness (JMH) documentation:
      * https://github.com/openjdk/jmh
      *
