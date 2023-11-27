@@ -22,7 +22,7 @@ import wordplay.io.DictionaryReader;
  * This class uses the Java Microbenchmark Harness (JMH) to measure the
  * time it takes to perform certain operations on a LinkedList.
  */
-public class LinkedListPerformance extends BenchmarkConfig {
+public class LinkedListBenchmark extends BenchmarkConfig {
 
     // We use the list of all Finnish words as our data set.
     private static final List<String> finnishWords = DictionaryReader.readFinnishWords();
@@ -41,6 +41,15 @@ public class LinkedListPerformance extends BenchmarkConfig {
     public void accessLinkedListWithIterator() {
         for (String word : linkedList) {
             word.length(); // the same operation as above, for comparison
+        }
+    }
+
+    @Benchmark
+    public void addStringsToBeginningOfLinkedList() {
+        List<String> newList = new LinkedList<>();
+
+        for (String word : finnishWords) {
+            newList.add(0, word);
         }
     }
 }

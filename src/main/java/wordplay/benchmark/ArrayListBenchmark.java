@@ -25,7 +25,7 @@ import wordplay.io.DictionaryReader;
  * This class uses the Java Microbenchmark Harness (JMH) to measure the
  * time it takes to perform certain operations on an ArrayList.
  */
-public class ArrayListPerformance extends BenchmarkConfig {
+public class ArrayListBenchmark extends BenchmarkConfig {
 
     // We use the list of all Finnish words as our data set.
     private static final List<String> finnishWords = DictionaryReader.readFinnishWords();
@@ -44,6 +44,15 @@ public class ArrayListPerformance extends BenchmarkConfig {
     public void accessArrayListWithIterator() {
         for (String word : arrayList) {
             word.length(); // the same operation as above, for comparison
+        }
+    }
+
+    @Benchmark
+    public void addStringsToBeginningOfArrayList() {
+        List<String> newList = new ArrayList<>();
+
+        for (String word : finnishWords) {
+            newList.add(0, word);
         }
     }
 }

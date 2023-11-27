@@ -20,7 +20,7 @@ Tiedot tiedostojen tekijänoikeuksista ja käyttöehdoista löydät alempaa täl
 
 ## Osa 1: `ArrayList`:in ja `LinkedList`:in suorituskykytestaus
 
-Tämän repositorion paketista [`wordplay.benchmark`](./src/main/java/wordplay/benchmark/) löytyy kaksi luokkaa, jotka sisältävät suorituskykytestejä. Suorituskykytestit havainnollistavat merkittäviä eroja `ArrayList`:in sekä `LinkedList`:in välillä, mutta testeissä ilmenee myös merkittäviä eroja eri iterointitapojen välillä.
+Tämän repositorion paketista [`wordplay.benchmark`](./src/main/java/wordplay/benchmark/) löytyy luokat [`ArrayListBenchmark`](./src/main/java/wordplay/benchmark/ArrayListBenchmark.java) ja [`LinkedListBenchmark`](./src/main/java/wordplay/benchmark/LinkedListBenchmark.java), jotka sisältävät suorituskykytestejä. Suorituskykytestit havainnollistavat merkittäviä eroja `ArrayList`:in sekä `LinkedList`:in välillä tietoa haettaessa, läpikäytäessä ja lisättäessä.
 
 Suorituskykytestit on toteutettu [Java Microbenchmark Harness (JMH)](https://github.com/openjdk/jmh)-työkalulla:
 
@@ -37,14 +37,18 @@ Suorita suorituskykytestit suorittamalla [`BenchmarkRunner`-luokka](./src/main/j
 
 💡 *Jos tulosteen erikoismerkit kuten &thickapprox; ja <sup>-4</sup> eivät näy kunnolla Windowsissa, voit kokeilla [vaihtaa terminaalin merkistöksi](https://www.google.com/search?q=chcp+65001) utf-8:n komennolla `chcp 65001`.*
 
-`BenchmarkRunner` suorittaa joukon suorituskykytestejä [JMH-työkalulla](https://github.com/openjdk/jmh) ja tulostaa tietoa testien edistymisestä. Suorituskykytestit koostuvat sekä lämmittelyvaiheesta että testattavien metodien toistuvista kutsuista. Lämmittelyvaihe on tärkeä, jotta kaikki tarvittavat komponentit on saatu ladattua ja laitteistolta tarvittavat resurssit varattua ennen varsinaista mittausta. Testien tulos, eli eri metodien keskimääräinen suoritusaika, löytyvät raportin lopusta sen valmistuttua:
+`BenchmarkRunner` suorittaa joukon suorituskykytestejä ja tulostaa tietoa testien edistymisestä. Suorituskykytestit koostuvat sekä lämmittelyvaiheesta että testattavien metodien toistuvista kutsuista. Lämmittelyvaihe on tärkeä, jotta kaikki tarvittavat komponentit on saatu ladattua ja laitteistolta tarvittavat resurssit varattua ennen varsinaista mittausta. Testien tulos, eli eri metodien keskimääräinen suoritusaika, löytyvät raportin lopusta sen valmistuttua:
 
 ```
-Benchmark                                           Mode  Cnt   Score    Error  Units
-ArrayListPerformance.accessArrayListWithIndex       avgt    5  ≈ 10⁻⁴            s/op
-ArrayListPerformance.accessArrayListWithIterator    avgt    5  ≈ 10⁻⁴            s/op
-LinkedListPerformance.accessLinkedListWithIndex     avgt    5   2.786 ±  0.131   s/op
-LinkedListPerformance.accessLinkedListWithIterator  avgt    5  ≈ 10⁻⁴            s/op
+Benchmark                                              Mode  Cnt   Score    Error  Units
+ArrayListBenchmark.accessArrayListWithIndex            avgt    5  ≈ 10⁻⁴            s/op
+LinkedListBenchmark.accessLinkedListWithIndex          avgt    5   2.792 ±  0.118   s/op
+
+ArrayListBenchmark.accessArrayListWithIterator         avgt    5  ≈ 10⁻⁴            s/op
+LinkedListBenchmark.accessLinkedListWithIterator       avgt    5  ≈ 10⁻⁴            s/op
+
+ArrayListBenchmark.addStringsToBeginningOfArrayList    avgt    5   0.426 ±  0.052   s/op
+LinkedListBenchmark.addStringsToBeginningOfLinkedList  avgt    5   0.001 ±  0.001   s/op
 ```
 
 Yllä *"avgt"* tarkoittaa *"average time"*. *"Cnt"* tarkoittaa suorituskertojen määrää ja *"score"* tarkoittaa testatun metodin yksittäisen suorituskerran keskimääräistä kestoa. *"s/op"* puolestaan on yksikkö, eli sekuntia per metodin suoritus. Tarkemman selityksen suoritetuista metodeista löydät seuraavista kappaleista.
@@ -52,7 +56,7 @@ Yllä *"avgt"* tarkoittaa *"average time"*. *"Cnt"* tarkoittaa suorituskertojen 
 
 ### Haku listalta indeksin avulla (*accessArrayListWithIndex* ja *accessLinkedListWithIndex*)
 
-Luokissa [`ArrayListPerformance`](./src/main/java/wordplay/benchmark/ArrayListPerformance.java) ja [`LinkedListPerformance`](./src/main/java/wordplay/benchmark/LinkedListPerformance.java) testataan samaa koodia sekä `ArrayList`- että `LinkedList`-tyyppisen listan kanssa. Koodissa suomenkielinen sanalista käydään läpi alusta loppuun ja jokaisen sanan kohdalla kutsutaan sen `length()`-metodia.
+Luokissa [`ArrayListBenchmark`](./src/main/java/wordplay/benchmark/ArrayListBenchmark.java) ja [`LinkedListBenchmark`](./src/main/java/wordplay/benchmark/LinkedListBenchmark.java) testataan samoja operaatioita sekä `ArrayList`- että `LinkedList`-tyyppisen listan kanssa. Ensimmäisissä metodeissa suomenkielinen sanalista käydään läpi alusta loppuun ja jokaisen sanan kohdalla kutsutaan sen `length()`-metodia.
 
 Suorituskykytestit on *annotoitu* `@Benchmark`-annotaatiolla, jonka avulla JMH-työkalu tietää niiden olevan suorituskykytestejä:
 
@@ -69,7 +73,7 @@ public void accessArrayListWithIndex() {
 }
 ```
 
-Yllä oleva [`ArrayList`-tyyppistä listaa hyödyntävä koodi](./src/main/java/wordplay/benchmark/ArrayListPerformance.java) on lähes identtinen [alla olevan `LinkedList`-version kanssa](./src/main/java/wordplay/benchmark/LinkedListPerformance.java):
+Yllä oleva [`ArrayList`-tyyppistä listaa hyödyntävä koodi](./src/main/java/wordplay/benchmark/ArrayListBenchmark.java) on lähes identtinen [alla olevan `LinkedList`-version kanssa](./src/main/java/wordplay/benchmark/LinkedListBenchmark.java):
 
 ```java
 LinkedList<String> linkedList = new LinkedList<>(finnishWords); // 93 086 sanaa
@@ -88,8 +92,8 @@ Kuten testin tuloksista huomataan, koodi, jossa käydään [noin 93&nbsp;086 san
 
 ```
 Benchmark                                           Mode  Cnt   Score    Error  Units
-ArrayListPerformance.accessArrayListWithIndex       avgt    5  ≈ 10⁻⁴            s/op
-LinkedListPerformance.accessLinkedListWithIndex     avgt    5   2.837 ±  0.276   s/op
+ArrayListBenchmark.accessArrayListWithIndex       avgt    5  ≈ 10⁻⁴            s/op
+LinkedListBenchmark.accessLinkedListWithIndex     avgt    5   2.837 ±  0.276   s/op
 ```
 
 `ArrayList`-tyyppisessä listassa tietyn arvon hakeminen indeksillä edellyttää vain yhden hakuoperaation, [koska se hyödyntää sisäisesti taulukkoa](https://github.com/openjdk/jdk/blob/6aa197667ad05bd93adf3afc7b06adbfb2b18a22/src/java.base/share/classes/java/util/ArrayList.java#L133-L139). Listan kaikkien arvojen läpikäynti edellyttää siis vain saman verran operaatioita, kuin listalla on pituutta:
@@ -129,7 +133,7 @@ Operaatioiden kestot ja määrät eivät ole niin yksiselitteisiä kuin edellä 
 
 ### Listan iterointi (*accessArrayListWithIterator* ja *accessLinkedListWithIterator*)
 
-Samoissa suorituskykytestiluokissa [`ArrayListPerformance`](./src/main/java/wordplay/benchmark/ArrayListPerformance.java) ja [`LinkedListPerformance`](./src/main/java/wordplay/benchmark/LinkedListPerformance.java) on myös toiset testimetodit, joissa sekä `ArrayList`- että `LinkedList`-tyyppisten listojen arvot käydään läpi yksi kerrallaan *iteroimalla*:
+Samoissa suorituskykytestiluokissa [`ArrayListBenchmark`](./src/main/java/wordplay/benchmark/ArrayListBenchmark.java) ja [`LinkedListBenchmark`](./src/main/java/wordplay/benchmark/LinkedListBenchmark.java) on myös toiset testimetodit, joissa sekä `ArrayList`- että `LinkedList`-tyyppisten listojen arvot käydään läpi yksi kerrallaan *iteroimalla*:
 
 ```java
 ArrayList<String> arrayList = new ArrayList<>(finnishWords);
@@ -161,8 +165,8 @@ Tässä tapauksessa listojen suorituskyvyssä ei ole havaittavissa eroavaisuuksi
 
 ```
 Benchmark                                           Mode  Cnt   Score    Error  Units
-ArrayListPerformance.accessArrayListWithIterator    avgt    5  ≈ 10⁻⁴            s/op
-LinkedListPerformance.accessLinkedListWithIterator  avgt    5  ≈ 10⁻⁴            s/op
+ArrayListBenchmark.accessArrayListWithIterator    avgt    5  ≈ 10⁻⁴            s/op
+LinkedListBenchmark.accessLinkedListWithIterator  avgt    5  ≈ 10⁻⁴            s/op
 ```
 
 Tässä iterointiin perustuvassa ratkaisussa sama `LinkedList`-lista suoriutuu siis samasta tehtävästä noin 30&nbsp;000 kertaa paremmin kuin edellisessä indekseihin perustuvassa `get(i)`-ratkaisussa.
