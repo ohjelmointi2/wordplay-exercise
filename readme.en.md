@@ -33,9 +33,9 @@ Run the performance tests by executing the [`BenchmarkRunner`](./src/main/java/w
 .\gradlew.bat run  # windows
 ```
 
-💡 *Jos tulosteen erikoismerkit kuten &thickapprox; ja <sup>-4</sup> eivät näy kunnolla Windowsissa, voit kokeilla [vaihtaa terminaalin merkistöksi](https://www.google.com/search?q=chcp+65001) utf-8:n komennolla `chcp 65001`.*
+💡 *If special characters in the output, such as &thickapprox; and <sup>-4</sup>, do not display correctly on Windows, you can try [changing the terminal's encoding](https://www.google.com/search?q=chcp+65001) to UTF-8 with the command `chcp 65001`.*
 
-`BenchmarkRunner` suorittaa joukon suorituskykytestejä ja tulostaa tietoa testien edistymisestä. Suorituskykytestit koostuvat sekä lämmittelyvaiheesta että testattavien metodien toistuvista kutsuista. Lämmittelyvaihe on tärkeä, jotta kaikki tarvittavat komponentit on saatu ladattua ja laitteistolta tarvittavat resurssit varattua ennen varsinaista mittausta. Testien tulos, eli eri metodien keskimääräinen suoritusaika, löytyvät raportin lopusta sen valmistuttua:
+`BenchmarkRunner` executes a series of performance tests and prints information about the progress of the tests. The performance tests consist of both a warm-up phase and repeated calls to the methods being tested. The warm-up phase is important to ensure that all necessary components are loaded and the required resources are allocated from the hardware before the actual measurement. The results of the tests, i.e., the average execution time of the different methods, can be found at the end of the report once it is completed:
 
 ```
 Benchmark                                              Mode  Cnt   Score    Error  Units
@@ -49,8 +49,7 @@ ArrayListBenchmark.addStringsToBeginningOfArrayList    avgt    5   0.426 ±  0.0
 LinkedListBenchmark.addStringsToBeginningOfLinkedList  avgt    5   0.001 ±  0.001   s/op
 ```
 
-Yllä *"avgt"* tarkoittaa *"average time"*. *"Cnt"* tarkoittaa suorituskertojen määrää ja *"score"* tarkoittaa testatun metodin yksittäisen suorituskerran keskimääräistä kestoa. *"s/op"* puolestaan on yksikkö, eli sekuntia per metodin suoritus. Tarkemman selityksen suoritetuista metodeista löydät seuraavista kappaleista.
-
+Above, *"avgt"* means *"average time"*. *"Cnt"* refers to the number of executions, and *"score"* indicates the average duration of a single execution of the tested method. *"s/op"* is the unit, meaning seconds per method execution. A more detailed explanation of the executed methods can be found in the following paragraphs.
 
 ### Haku listalta indeksin avulla (*accessArrayListWithIndex* ja *accessLinkedListWithIndex*)
 
