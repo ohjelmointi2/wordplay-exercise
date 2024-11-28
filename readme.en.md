@@ -1,22 +1,22 @@
-# Wordplay-tuntiharjoitus
+# Wordplay lesson exercise
 
-Tämän harjoituksen tarkoituksena on perehtyä erilaisiin tietorakenteisiin ja algoritmeihin erityisesti niiden suorituskyvyn näkökulmasta. Samassa sivuamme ohjelmien suorituskykytestausta ja ["asymptoottisen suoritusajan"](https://fi.wikipedia.org/wiki/Asymptoottinen_suoritusaika) käsitettä.
+The purpose of this exercise is to familiarize yourself with various data structures and algorithms, particularly from the perspective of their performance. We will also touch on program performance testing and the concept of ["asymptotic computational complexity"](https://en.wikipedia.org/wiki/Asymptotic_computational_complexity).
 
-Harjoituksen ensimmäisessä osassa perehdytään Javan listojen suorituskykyyn. Jälkimmäisessä osassa kehitettävä sovellus hyödyntää avointa nimi- ja sanakirja-aineistoa ja etsii sellaisia suomenkielisiä etunimiä, joilla on nimen lisäksi myös jokin toinen merkitys sanakirjassa. Tällaisia nimiä ovat esimerkiksi *Tuuli* ja *Onni*.
+In the first part of the exercise, we will explore the performance of Java lists. In the latter part, the application to be developed will utilize open name and dictionary data and search for Finnish first names that also have another meaning in the dictionary. Examples of such names are *Tuuli* (wind) and *Onni* (happiness).
 
-💡 *Tätä harjoitusta ei erikseen palauteta eikä arvioida, joten sitä varten ei ole GitHub classroom -linkkiä. Voit luoda tehtävästä oman kopion joko "use this template"- tai "fork"-toiminnoilla.*
+💡 *This exercise is not to be submitted or graded separately, so there is no GitHub classroom link for it. You can create your own copy of the task using either the "use this template" or "fork" functions.*
 
+## Data used in the exercise
 
-## Harjoituksessa käytettävä data
+The Java programs in this exercise utilize several files that are in slightly different formats: the dictionary content is in plain text, while the name data is in CSV format.
 
-Tämän harjoituksen Java-ohjelmat hyödyntävät useita tiedostoja, jotka ovat hieman poikkeavissa muodoissa: sanakirjan sisältö on raakatekstinä, kun taas nimiaineisto on csv-muodossa.
+The file [`kaikkisanat.txt`](./data/kaikkisanat.txt)  in the exercise package contains Finnish words in plain text in alphabetical order. The files [`etunimitilasto-naiset-ensimmainen.csv`](./data/etunimitilasto-naiset-ensimmainen.csv) and [`etunimitilasto-miehet-ensimmainen.csv`](./data/etunimitilasto-miehet-ensimmainen.csv) contain first names and their counts in [CSV format](https://en.wikipedia.org/wiki/Comma-separated_values).
 
-Tehtäväpaketin tiedosto [`kaikkisanat.txt`](./data/kaikkisanat.txt) sisältää suomenkielisiä sanoja raakatekstinä aakkosjärjestyksessä. Tiedostot [`etunimitilasto-naiset-ensimmainen.csv`](./data/etunimitilasto-naiset-ensimmainen.csv) sekä [`etunimitilasto-miehet-ensimmainen.csv`](./data/etunimitilasto-miehet-ensimmainen.csv) puolestaan sisältävät etunimiä sekä niiden lukumääriä [CSV-muodossa](https://fi.wikipedia.org/wiki/CSV).
-
-Tiedot tiedostojen tekijänoikeuksista ja käyttöehdoista löydät alempaa tältä sivulta kohdasta [Tekijänoikeudet](#tekijänoikeudet).
+Information about file copyrights and terms of use can be found further down this page under "Copyrights".
 
 💡 *Kaikki tämän harjoituksen tiedostot on tallennettu [`UTF-8`-merkistökoodauksella](https://en.wikipedia.org/wiki/UTF-8). `UTF-8` on [yleisin merkistökoodaus](https://en.wikipedia.org/wiki/Popularity_of_text_encodings), mutta erityisesti Windows-ympäristössä järjestelmäsi saattaa käyttää jotain muuta merkistöä. Lisätietoja merkistöistä löydät esimerkiksi [tästä artikkelista](https://www.baeldung.com/java-char-encoding).*
 
+💡 *All files for this exercise are saved with [`UTF-8` character encoding](https://en.wikipedia.org/wiki/UTF-8). `UTF-8` is [the most common character encoding](https://en.wikipedia.org/wiki/Popularity_of_text_encodings), but especially in a Windows environment, your system might use a different encoding. You can find more information about character encodings in [this article](https://www.baeldung.com/java-char-encoding).*
 
 ## Osa 1: `ArrayList`:in ja `LinkedList`:in suorituskykytestaus
 
