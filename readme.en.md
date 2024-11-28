@@ -14,8 +14,6 @@ The file [`kaikkisanat.txt`](./data/kaikkisanat.txt)  in the exercise package co
 
 Information about file copyrights and terms of use can be found further down this page under "Copyrights".
 
-💡 *Kaikki tämän harjoituksen tiedostot on tallennettu [`UTF-8`-merkistökoodauksella](https://en.wikipedia.org/wiki/UTF-8). `UTF-8` on [yleisin merkistökoodaus](https://en.wikipedia.org/wiki/Popularity_of_text_encodings), mutta erityisesti Windows-ympäristössä järjestelmäsi saattaa käyttää jotain muuta merkistöä. Lisätietoja merkistöistä löydät esimerkiksi [tästä artikkelista](https://www.baeldung.com/java-char-encoding).*
-
 💡 *All files for this exercise are saved with [`UTF-8` character encoding](https://en.wikipedia.org/wiki/UTF-8). `UTF-8` is [the most common character encoding](https://en.wikipedia.org/wiki/Popularity_of_text_encodings), but especially in a Windows environment, your system might use a different encoding. You can find more information about character encodings in [this article](https://www.baeldung.com/java-char-encoding).*
 
 ## Osa 1: `ArrayList`:in ja `LinkedList`:in suorituskykytestaus
