@@ -277,37 +277,28 @@ Using the `HashMap` data structure covered in the course as part of this solutio
 
 💡 *Note that the case of letters in names and dictionary words is not the same. For example, in the name file, `"Tuuli"` is written with an uppercase initial letter, while in the dictionary it is written in lowercase `"tuuli"`.*
 
-### Oikea ratkaisu
+### Correct solution
 
-Tieto sanalistasta löytyvien nimien määrästä löytyy oheisesta tiedostosta [ratkaisu.md](./ratkaisu.md).
+Information about the number of names found in the word list can be found in the accompanying file [ratkaisu.md](./ratkaisu.md).
 
-
-# Tekijänoikeudet
+# Copyrights
 
 ## Kotimaisten kielten keskuksen nykysuomen sanalista
 
-Harjoituksessa hyödynnetään [Kotimaisten kielten keskuksen nykysuomen sanalistaa](https://kaino.kotus.fi/sanat/nykysuomi/):
+The exercise utilizes the [Modern Finnish word list from the Institute for the Languages of Finland](https://kaino.kotus.fi/sanat/nykysuomi/), which is licensed under the [GNU LGPL license](http://www.gnu.org/licenses/lgpl.html), the [EUPL v.1.1 license](http://joinup.ec.europa.eu/software/page/eupl/licence-eupl), and the [Creative Commons Attribution 3.0 license](http://creativecommons.org/licenses/by/3.0/deed.fi).
 
-> *"Kotimaisten kielten keskus julkaisee taivutustiedoin täydennetyn nykysuomen sanalistan. Sanalista ei ole tyhjentävä tai auktoritatiivinen luettelo suomen kielen sanoista, vaan sen on tarkoitus mm. toimia apuvälineenä suomen kieltä käsittelevien tietokoneohjelmien ja suomenkielisten käyttöliittymien kehitystyössä. Sanalista perustuu pääosin CD-Perussanakirjan sanastoon."*
->
-> *"Sanalista julkaistaan lisensseillä GNU LGPL (Lesser General Public License), EUPL v.1.1 (Euroopan unionin yleinen lisenssi) ja CC Nimeä 3.0."*
->
->  Kotimaisten kielten keskus. Kotimaisten kielten keskuksen nykysuomen sanalista. https://kaino.kotus.fi/sanat/nykysuomi/
-
-[GNU LGPL -lisenssi](http://www.gnu.org/licenses/lgpl.html), [EUPL v.1.1 -lisenssi](http://joinup.ec.europa.eu/software/page/eupl/licence-eupl), [Creative Commons Nimeä 3.0 -lisenssi](http://creativecommons.org/licenses/by/3.0/deed.fi)
-
-Harjoituksessa hyödynnetty muokattu versio, jossa XML:n sijasta sanat ovat raakatekstinä, on lainattu [Hugo van Kemenaden](https://github.com/hugovk) GitHub-projektista [Every Finnish Word](https://github.com/hugovk/everyfinnishword).
-
+The modified version used in the exercise, where the words are in plain text instead of XML, is borrowed from [Hugo van Kemenade's](https://github.com/hugovk) GitHub project [Every Finnish Word](https://github.com/hugovk/everyfinnishword).
 
 ## Väestötietojärjestelmän suomalaisten nimiaineistot
 
-> *"[Digi- ja väestötietovirasto (DVV)](https://www.avoindata.fi/data/fi/organization/digi_ja_vaestotietovirasto) on julkaissut tietoaineiston [Väestötietojärjestelmän suomalaisten nimiaineistot](https://www.avoindata.fi/data/fi/dataset/none) lisenssillä [Creative Commons Attribution 4.0 International License](https://creativecommons.org/licenses/by/4.0/).*"
->
-> Väestötietojärjestelmän suomalaisten nimiaineistot. https://www.avoindata.fi/data/fi/dataset/none
+[Digi- ja väestötietovirasto (DVV)](https://www.avoindata.fi/data/fi/organization/digi_ja_vaestotietovirasto) on julkaissut tietoaineiston [Väestötietojärjestelmän suomalaisten nimiaineistot](https://www.avoindata.fi/data/fi/dataset/none) lisenssillä [Creative Commons Attribution 4.0 International License](https://creativecommons.org/licenses/by/4.0/).
 
+## Name data from the Finnish Population Information System
 
-## Tämä harjoitus
+[The Digital and Population Data Services Agency (DVV)](https://www.avoindata.fi/data/fi/organization/digi_ja_vaestotietovirasto) has published the dataset [Finnish Population Information System name data](https://www.avoindata.fi/data/fi/dataset/none) under the [Creative Commons Attribution 4.0 International License](https://creativecommons.org/licenses/by/4.0/).
 
-Tämän harjoituksen on kehittänyt Teemu Havulinna ja se on lisensoitu [Creative Commons BY-NC-SA -lisenssillä](https://creativecommons.org/licenses/by-nc-sa/4.0/).
+## This exercise
 
-Harjoituksenannon, käsiteltävien tiedostojen sekä lähdekoodien toteutuksessa on hyödynnetty ChatGPT 3.5:ttä sekä GitHub copilot -tekoälyavustinta.
+This exercise is made by Teemu Havulinna and translated to English by Kalle Ilves and it is licensed under a [Creative Commons BY-NC-SA license](https://creativecommons.org/licenses/by-nc-sa/4.0/).
+
+ChatGPT 3.5 language model and GitHub copilot AI assistant has been used to implement the exercise.
