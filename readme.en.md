@@ -180,14 +180,6 @@ for (String word : list) {
 // Performance is O(n)
 ```
 
-### Pohdittavaa
-
-Vaikka `ArrayList` näyttää edellä esitettyjen tietojen valossa olevan ylivertainen `LinkedList`:iin verrattuna, ei asia ole suinkaan niin yksiselitteinen.
-
-`ArrayList` suoriutuu huonosti tilanteista, joissa listan alkuun tai keskelle lisätään arvoja. Tällaisissa tilanteissa kohdeindeksin jälkeiset arvot joudutaan [kopioimaan listan taustalla olevassa taulukossa eteenpäin](https://github.com/openjdk/jdk/blob/6aa197667ad05bd93adf3afc7b06adbfb2b18a22/src/java.base/share/classes/java/util/ArrayList.java#L501-L522), mikä tarkoittaa pahimmassa tapauksessa koko taulukon sisällön kopiointia yhden pykälän eteenpäin. Vastaavasti `ArrayList`:in taustalla olevan taulukon täyttyessä se joudutaan korvaamaan uudella, suuremmalla taulukolla, mikä on myös suorituskyvyn kannalta raskas operaatio. `LinkedList`-tyyppisten listojen kohdalla olemassa olevia arvoja ei jouduta siirtämään.
-
-Tutustu itsenäisesti [`addStringsToBeginningOfArrayList`](./src/main/java/wordplay/benchmark/ArrayListBenchmark.java)- ja [`addStringsToBeginningOfLinkedList`](./src/main/java/wordplay/benchmark/LinkedListBenchmark.java)-metodien toteutukseen ja niiden suorituskykyyn.
-
 ### Considerations
 
 Although `ArrayList` appears to be superior to `LinkedList` based on the information presented above, the situation is not so straightforward.
@@ -208,6 +200,10 @@ LinkedListBenchmark.addStringsToBeginningOfLinkedList  avgt    5   0.001 ±  0.0
 
 Tässä Git-repositoriossa on tiedosto [kaikkisanat.txt](./data/kaikkisanat.txt), joka sisältää [Kotimaisten kielten keskuksen nykysuomen sanalistan](https://kaino.kotus.fi/sanat/nykysuomi/):
 
+## Part 2: Coding Task
+
+In this Git repository, there is a file [kaikkisanat.txt](./data/kaikkisanat.txt), which contains the [Modern Finnish word list from the Institute for the Languages of Finland](https://kaino.kotus.fi/sanat/nykysuomi/):
+
 ```
 aakkonen
 aakkosellinen
@@ -217,6 +213,8 @@ aakkosellisuus
 ```
 
 Repositorio sisältää myös tiedostot [etunimitilasto-naiset-ensimmainen.csv](./data/etunimitilasto-naiset-ensimmainen.csv) sekä [etunimitilasto-miehet-ensimmainen.csv](./data/etunimitilasto-miehet-ensimmainen.csv), joista löytyy [Digi- ja väestötietoviraston nimiaineistoissa](https://www.avoindata.fi/data/fi/organization/digi_ja_vaestotietovirasto) esiintyvät etunimet sekä niitä vastaavat lukumäärät:
+
+The repository also contains the files [etunimitilasto-naiset-ensimmainen.csv](./data/etunimitilasto-naiset-ensimmainen.csv) and [etunimitilasto-miehet-ensimmainen.csv](./data/etunimitilasto-miehet-ensimmainen.csv), which include the first names and their corresponding counts found in the name data from the [Digital and Population Data Services Agency](https://www.avoindata.fi/data/fi/organization/digi_ja_vaestotietovirasto):
 
 ```
 Etunimi;Lukumäärä
@@ -230,6 +228,7 @@ Leena;27 745
 
 Näiden tiedostojen lukemiseksi on olemassa valmiit metodit [`NamesReader.readFirstNames()`](./src/main/java/wordplay/io/NamesReader.java) sekä [`DictionaryReader.readFinnishWords()`](./src/main/java/wordplay/io/DictionaryReader.java), jotka palauttavat tiedostojen sisällöt listoina.
 
+To read these files, there are ready-made methods [`NamesReader.readFirstNames()`](./src/main/java/wordplay/io/NamesReader.java) and [`DictionaryReader.readFinnishWords()`](./src/main/java/wordplay/io/DictionaryReader.java), which return the contents of the files as lists.
 
 ### Ohjelman rakenne
 
