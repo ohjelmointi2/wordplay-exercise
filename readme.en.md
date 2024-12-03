@@ -196,10 +196,6 @@ LinkedListBenchmark.addStringsToBeginningOfLinkedList  avgt    5   0.001 ±  0.0
 
 🚀 *You can also write additional performance tests if you wish, experimenting with different cases where various types of collections perform differently.*
 
-## Osa 2: Koodaustehtävä
-
-Tässä Git-repositoriossa on tiedosto [kaikkisanat.txt](./data/kaikkisanat.txt), joka sisältää [Kotimaisten kielten keskuksen nykysuomen sanalistan](https://kaino.kotus.fi/sanat/nykysuomi/):
-
 ## Part 2: Coding Task
 
 In this Git repository, there is a file [kaikkisanat.txt](./data/kaikkisanat.txt), which contains the [Modern Finnish word list from the Institute for the Languages of Finland](https://kaino.kotus.fi/sanat/nykysuomi/):
@@ -211,8 +207,6 @@ aakkosellisesti
 aakkosellisuus
 ...
 ```
-
-Repositorio sisältää myös tiedostot [etunimitilasto-naiset-ensimmainen.csv](./data/etunimitilasto-naiset-ensimmainen.csv) sekä [etunimitilasto-miehet-ensimmainen.csv](./data/etunimitilasto-miehet-ensimmainen.csv), joista löytyy [Digi- ja väestötietoviraston nimiaineistoissa](https://www.avoindata.fi/data/fi/organization/digi_ja_vaestotietovirasto) esiintyvät etunimet sekä niitä vastaavat lukumäärät:
 
 The repository also contains the files [etunimitilasto-naiset-ensimmainen.csv](./data/etunimitilasto-naiset-ensimmainen.csv) and [etunimitilasto-miehet-ensimmainen.csv](./data/etunimitilasto-miehet-ensimmainen.csv), which include the first names and their corresponding counts found in the name data from the [Digital and Population Data Services Agency](https://www.avoindata.fi/data/fi/organization/digi_ja_vaestotietovirasto):
 
@@ -226,13 +220,11 @@ Leena;27 745
 ...
 ```
 
-Näiden tiedostojen lukemiseksi on olemassa valmiit metodit [`NamesReader.readFirstNames()`](./src/main/java/wordplay/io/NamesReader.java) sekä [`DictionaryReader.readFinnishWords()`](./src/main/java/wordplay/io/DictionaryReader.java), jotka palauttavat tiedostojen sisällöt listoina.
-
 To read these files, there are ready-made methods [`NamesReader.readFirstNames()`](./src/main/java/wordplay/io/NamesReader.java) and [`DictionaryReader.readFinnishWords()`](./src/main/java/wordplay/io/DictionaryReader.java), which return the contents of the files as lists.
 
-### Ohjelman rakenne
+### Program structure
 
-Koska tiedostoja on kahta eri tyyppiä, projektiin on toteutettu kaksi erillistä luokkaa niiden lukemiseksi: [DictionaryReader](./src/main/java/wordplay/io/DictionaryReader.java) ja [NamesReader](./src/main/java/wordplay/io/NamesReader.java). Molemmat luokat toteuttavat [WordplayReader](./src/main/java/wordplay/io/WordplayReader.java)-rajapinnan, jossa on määritettynä `readFile`-metodi:
+Since there are two different types of files, the project has implemented two separate classes for reading them: [DictionaryReader](./src/main/java/wordplay/io/DictionaryReader.java) and [NamesReader](./src/main/java/wordplay/io/NamesReader.java). Both classes implement the [WordplayReader](./src/main/java/wordplay/io/WordplayReader.java) interface, which defines the `readFile` method:
 
 ```mermaid
 classDiagram
@@ -262,30 +254,28 @@ classDiagram
     NamesReader --> WordplayReader : implements
 ```
 
-Yhteisen `readFile`-metodin lisäksi `NamesReader`- ja `DictionaryReader`-luokilla on omat apumetodit juuri niiden käsittelemien tiedostojen lukemiseksi:
+In addition to the common `readFile` method, the `NamesReader` and `DictionaryReader` classes have their own helper methods specifically for reading the files they handle:
 
 ```java
 List<String> finnishNames = NamesReader.readFirstNames();
 List<String> finnishWords = DictionaryReader.readFinnishWords();
 ```
 
-Sinun ei tarvitse toteuttaa tiedostojen käsittelyä itse, vaan voit hyödyntää edellä mainittuja metodeita.
+You do not need to implement file handling yourself; you can utilize the aforementioned methods.
 
+### `NamesInDictionary` class
 
-### [`NamesInDictionary`-luokka](./src/main/java/wordplay/NamesInDictionary.java)
+In this task, you need to complete the `main` method in the [`NamesInDictionary`](./src/main/java/wordplay/NamesInDictionary.java) class to iterate through both datasets introduced earlier and **print out Finnish names that are also found in the dictionary**. You should not print names that are only part of a longer word. For example, the name *Antti* appears in words like "elef*antti*" and "deodor*antti*", but not on its own.
 
-Tässä tehtävässä sinun tulee täydentää [`NamesInDictionary`-luokkaan](./src/main/java/wordplay/NamesInDictionary.java) `main`-metodi, joka käy molemmat edellää esitellyt aineistot läpi ja **tulostaa sellaiset suomenkieliset nimet, jotka löytyvät myös sanakirjasta**. Et saa tulostaa nimiä, jotka löytyvät ainoastaan osana jotain pidempää sanaa. Esimerkiksi nimi *Antti* löytyy osana sanoja kuten "elef*antti*" ja "deodor*antti*", mutta ei yksinään.
+You can implement your solution using a loop structure and the list's `contains()` method. Alternatively, the task can also be solved with two nested loops and the `equalsIgnoreCase` method. Regardless of the approach you choose, the solution will likely be quite slow, as for each name (`n=15,665`), you need to go through all the words in the word list (`m=93,086`). This solution would require `n * m` operations, which means a total of 1,458,192,190 comparison operations with these datasets.
 
-Voit toteuttaa ratkaisusi esimerkiksi toistorakenteella sekä listan `contains()`-metodilla. Vaihtoehtoisesti tehtävän voi ratkaista myös kahdella sisäkkäisellä toistolla ja `equalsIgnoreCase`-metodilla. Riippumatta kumman lähestymistavan valitset, tulee ratkaisu todennäköisesti olemaan melko hidas, koska jokaista nimeä (`n=15 665`) kohden joudutaan käymään läpi kaikki sanalistan sanat (`m=93 086`). Tämä ratkaisu vaatisi siis `n * m` operaatiota, joka tarkoittaa näiden aineistojen kanssa peräti 1&nbsp;458&nbsp;192&nbsp;190 vertailuoperaatiota.
+Even if your computer is powerful, a ["brute force"](https://en.wikipedia.org/wiki/Brute-force_search) solution that iterates through the lists and compares all words will likely take several seconds.
 
-Vaikka tietokoneesi olisi tehokas, vie listoja läpikäyvä ja kaikkia sanoja vertaileva ["brute force"](https://en.wikipedia.org/wiki/Brute-force_search)-ratkaisu todennäköisesti useita sekunteja.
+Using the `HashMap` data structure covered in the course as part of this solution might be beneficial. You can also explore the [`HashSet`](https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/HashSet.html) data structure, which operates similarly to `HashMap`, but stores only individual values instead of key-value pairs. The list's `contains()` method requires traversing the entire list, whereas `HashMap`'s `containsKey` requires only one operation ([baeldung.com](https://www.baeldung.com/java-treemap-vs-hashmap)).
 
-Kurssilla käsitellyn `HashMap`-tietorakenteen käyttäminen osana tätä ratkaisua voi olla kannattavaa. Voit tutustaua myös [`HashSet`-tietorakenteeseen](https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/HashSet.html), jonka toimintaperiaate on samankaltainen kuin `HashMap`:illa, mutta avain-arvo-parien sijasta siihen tallennetaan vain yksittäisiä arvoja. Listan `contains()`-metodi vaatii koko listan läpikäynnin, kun taas `HashMap`:in `containsKey` vaatii vain yhden operaation ([baeldung.com](https://www.baeldung.com/java-treemap-vs-hashmap)).
+⏱ *If your program produces the correct solution in tenths of a second, it is likely efficiently implemented.*
 
-⏱ *Jos ohjelmasi tuottaa oikean ratkaisun sekunnin kymmenesosissa, on se todennäköisesti tehokkaasti toteutettu.*
-
-💡 *Huomaa, että nimien ja sanakirjan sanojen kirjainkoko ei ole sama. Nimitiedostossa esimerkiksi `"Tuuli"` on kirjoitettu isolla alkukirjaimella, kun sanakirjassa se on kirjoitettu pienellä `"tuuli"`.*
-
+💡 *Note that the case of letters in names and dictionary words is not the same. For example, in the name file, `"Tuuli"` is written with an uppercase initial letter, while in the dictionary it is written in lowercase `"tuuli"`.*
 
 ### Oikea ratkaisu
 
