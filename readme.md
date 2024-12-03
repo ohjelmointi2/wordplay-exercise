@@ -1,3 +1,6 @@
+> [!NOTE]  
+> The English translation for this exercise can be found in [this file](./readme.en.md).
+
 # Wordplay-tuntiharjoitus
 
 Tämän harjoituksen tarkoituksena on perehtyä erilaisiin tietorakenteisiin ja algoritmeihin erityisesti niiden suorituskyvyn näkökulmasta. Samassa sivuamme ohjelmien suorituskykytestausta ja ["asymptoottisen suoritusajan"](https://fi.wikipedia.org/wiki/Asymptoottinen_suoritusaika) käsitettä.
