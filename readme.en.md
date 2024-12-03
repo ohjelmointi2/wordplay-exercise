@@ -51,14 +51,14 @@ LinkedListBenchmark.addStringsToBeginningOfLinkedList  avgt    5   0.001 ±  0.0
 
 Above, *"avgt"* means *"average time"*. *"Cnt"* refers to the number of executions, and *"score"* indicates the average duration of a single execution of the tested method. *"s/op"* is the unit, meaning seconds per method execution. A more detailed explanation of the executed methods can be found in the following paragraphs.
 
-### Haku listalta indeksin avulla (*accessArrayListWithIndex* ja *accessLinkedListWithIndex*)
+### Searching the list byiIndex (*accessArrayListWithIndex* and *accessLinkedListWithIndex*)
 
-Luokissa [`ArrayListBenchmark`](./src/main/java/wordplay/benchmark/ArrayListBenchmark.java) ja [`LinkedListBenchmark`](./src/main/java/wordplay/benchmark/LinkedListBenchmark.java) testataan samoja operaatioita sekä `ArrayList`- että `LinkedList`-tyyppisen listan kanssa. Ensimmäisissä metodeissa suomenkielinen sanalista käydään läpi alusta loppuun ja jokaisen sanan kohdalla kutsutaan sen `length()`-metodia.
+In the classes [`ArrayListBenchmark`](./src/main/java/wordplay/benchmark/ArrayListBenchmark.java) and [`LinkedListBenchmark`](./src/main/java/wordplay/benchmark/LinkedListBenchmark.java), the same operations are tested with both `ArrayList` and `LinkedList` types of lists. In the initial methods, a Finnish word list is traversed from start to finish, and for each word, its `length()` method is called.
 
-Suorituskykytestit on *annotoitu* `@Benchmark`-annotaatiolla, jonka avulla JMH-työkalu tietää niiden olevan suorituskykytestejä:
+The performance tests are *annotated* with the `@Benchmark` annotation, which allows the JMH tool to recognize them as performance tests:
 
 ```java
-ArrayList<String> arrayList = new ArrayList<>(finnishWords); // 93 086 sanaa
+ArrayList<String> arrayList = new ArrayList<>(finnishWords); // 93 086 words
 
 @Benchmark
 public void accessArrayListWithIndex() {
@@ -66,14 +66,16 @@ public void accessArrayListWithIndex() {
         arrayList.get(i).length();
     }
 
-    // metodin suoritusaika on keskimäärin 0,0001 sekuntia
+    // average execution time of the method is 0,0001 seconds
 }
 ```
 
 Yllä oleva [`ArrayList`-tyyppistä listaa hyödyntävä koodi](./src/main/java/wordplay/benchmark/ArrayListBenchmark.java) on lähes identtinen [alla olevan `LinkedList`-version kanssa](./src/main/java/wordplay/benchmark/LinkedListBenchmark.java):
 
+The above code [utilizing an `ArrayList` type list](./src/main/java/wordplay/benchmark/ArrayListBenchmark.java) is almost identical to the [below `LinkedList` version](./src/main/java/wordplay/benchmark/LinkedListBenchmark.java):
+
 ```java
-LinkedList<String> linkedList = new LinkedList<>(finnishWords); // 93 086 sanaa
+LinkedList<String> linkedList = new LinkedList<>(finnishWords); // 93 086 words
 
 @Benchmark
 public void accessLinkedListWithIndex() {
@@ -81,11 +83,11 @@ public void accessLinkedListWithIndex() {
         linkedList.get(i).length();
     }
 
-    // metodin suoritusaika on keskimäärin 2.792 sekuntia
+    // average execution time of the method is 2.792 seconds
 }
 ```
 
-Kuten testin tuloksista huomataan, koodi, jossa käydään [noin 93&nbsp;086 sanan pituinen aineisto](./data/kaikkisanat.txt) läpi yksi kerrallaan indeksien avulla vie `ArrayList`-listalta keskimäärin 10<sup>-4</sup> eli **0.0001 sekuntia**. `LinkedList`-tyyppiseltä listalta sama läpikäynti vie keskimäärin peräti **2.792 sekuntia**, eli **noin 30&nbsp;000 kertaa kauemmin**:
+As observed from the test results, the code that iterates through a dataset of [approximately 93,086 words](./data/kaikkisanat.txt) one by one using indices takes an average of 10<sup>-4</sup> or **0.0001 seconds** with an `ArrayList`. The same iteration with a `LinkedList` takes an average of **2.792 seconds**, which is **about 30,000 times longer**:
 
 ```
 Benchmark                                           Mode  Cnt   Score    Error  Units
@@ -93,40 +95,39 @@ ArrayListBenchmark.accessArrayListWithIndex         avgt    5  ≈ 10⁻⁴     
 LinkedListBenchmark.accessLinkedListWithIndex       avgt    5   2.792 ±  0.118   s/op
 ```
 
-`ArrayList`-tyyppisessä listassa tietyn arvon hakeminen indeksillä edellyttää vain yhden hakuoperaation, [koska se hyödyntää sisäisesti taulukkoa](https://github.com/openjdk/jdk/blob/6aa197667ad05bd93adf3afc7b06adbfb2b18a22/src/java.base/share/classes/java/util/ArrayList.java#L133-L139). Listan kaikkien arvojen läpikäynti edellyttää siis vain saman verran operaatioita, kuin listalla on pituutta:
+In an `ArrayList` type list, searching for a specific value by index requires only one lookup operation, [because it internally uses an array](https://github.com/openjdk/jdk/blob/6aa197667ad05bd93adf3afc7b06adbfb2b18a22/src/java.base/share/classes/java/util/ArrayList.java#L133-L139). Therefore, iterating through all the values in the list requires only as many operations as the length of the list:
 
 ```java
-// toistetaan listan pituuden verran (n kpl):
+// repeated as many times as the length of the list (n times):
 for (int i = 0; i < arrayList.size(); i++) {
 
     // haku taulukosta vaatii vain 1 operaation
     arrayList.get(i);
 }
 
-// yhteensä siis tehdään n * 1 operaatiota: O(n)
+// in total, n * 1 operations are performed: O(n)
 ```
 
-`LinkedList`-tyyppisissä listoissa alkiot ovat "peräkkäin" ja yksittäisen arvon hakeminen keskeltä [edellyttää kaikkien sitä edeltävien arvojen läpikäyntiä joko alusta tai lopusta haluttuun indeksiin asti](https://github.com/openjdk/jdk/blob/6aa197667ad05bd93adf3afc7b06adbfb2b18a22/src/java.base/share/classes/java/util/LinkedList.java#L574-L591). Esimerkiksi indeksistä 10 hakeminen linkitetyltä listalta vaatii siis ensin "linkkien/solmujen" 0, 1, 2, ... 9 läpikäyntiä, olettaen, että lähdetään liikkeelle listan alusta.
+In `LinkedList` type lists, elements are "in sequence" and searching for a single value from the middle [requires traversing all preceding values either from the start or the end to the desired index](https://github.com/openjdk/jdk/blob/6aa197667ad05bd93adf3afc7b06adbfb2b18a22/src/java.base/share/classes/java/util/LinkedList.java#L574-L591). For example, searching from index 10 in a linked list requires first traversing through "links/nodes" 0, 1, 2, ... 9, assuming the traversal starts from the beginning of the list.
 
-Koska Javan linkitettyä listaa voidaan käydä läpi joko [alusta loppuun tai lopusta alkuun](https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/LinkedList.html), on jokaisen listalla olevan indeksin keskimääräinen etäisyys lähtöpisteestä 1/4 listan pituudesta. Hakuoperaatio noin 90&nbsp;000 sanan pituiselta listaltamme vaatii siis keskimäärin noin 22&nbsp;500 "linkin/solmun" läpikäyntiä.
+Since Java's linked list can be traversed either [from start to end or from end to start](https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/LinkedList.html), the average distance of each index from the starting point is 1/4 of the list's length. Therefore, a search operation on our list of approximately 90,000 words requires traversing an average of about 22,500 "links/nodes".
 
 ```java
-// listan pituuden (n) verran operaatioita:
+// operations equivalent to the length of the list (n):
 for (int i = 0; i < linkedList.size(); i++) {
 
-    // jokainen `get`-kutsu vaatii keskimäärin n/4 operaatiota:
+    // each `get` call requires an average of n/4 operations:
     linkedList.get(i);
 }
 
-// yhteensä siis tehdään noin n * n/4 operaatiota: O(n²)
+// in total, approximately n * n/4 operations are performed: O(n²)
 ```
 
-Suorituskykytesteissä ja tehokkuutta arvioitaessa mittaustarkkuus ei ole täydellinen, eikä siihen oikeastaan tarvitse edes pyrkiä. Oleellisempaa on ymmärtää, miten algoritmi suoriutuu suhteessa sen käsittelemän tietojoukon kokoon. Algoritmi, jonka suorittamien operaatioiden suhde tietojoukon kokoon on `n * n/4`, skaalautuu yhtä huonosti kuin algoritmi, jonka suhde on `n * n` eli <code>n<sup>2</sup></code>.
+When evaluating performance tests and efficiency, measurement accuracy is not perfect, nor does it need to be. What is more important is understanding how the algorithm performs relative to the size of the dataset it processes. An algorithm whose operations scale with the dataset size as `n * n/4` scales as poorly as an algorithm with a ratio of `n * n` or <code>n<sup>2</sup></code>.
 
-Operaatioiden kestot ja määrät eivät ole niin yksiselitteisiä kuin edellä on esitetty, mutta teorian ja suorituskykytestien perusteella vaikuttaa vahvasti siltä, että `LinkedList` suoriutui testistä tällä suomenkielisen sanalistan sisältävällä tietoaineistolla **kymmeniä tuhansia kertoja** hitaammin kuin `ArrayList`.
+The durations and counts of operations are not as straightforward as presented above, but based on theory and performance tests, it strongly appears that the `LinkedList` performed **tens of thousands of times** slower than the `ArrayList` in this test with the Finnish word list dataset.
 
-💡 *On myös tärkeää huomata, että aineiston määrän kasvaessa myös ero suorituskyvyssä kasvaa. Jos listassa olisi kymmenkertainen määrä alkioita, `ArrayList`:in läpikäynti veisi kymmenen kertaa enemmän aikaa. `LinkedList`:in läpikäynti puolestaan veisi arviolta sata kertaa enemmän aikaa, koska läpi käytäviä indeksejä olisi kymmenkertainen määrä. Lisäksi jokaista indeksiä kohden tehtävä `get(i)`-kutsu olisi myös keskimäärin kymmenen kertaa nykyistä hitaampi.*
-
+💡 *It is also important to note that as the dataset size increases, the performance difference also grows. If the list had ten times the number of elements, traversing the `ArrayList` would take ten times longer. Traversing the `LinkedList`, on the other hand, would take approximately a hundred times longer, because there would be ten times more indices to traverse. Additionally, each `get(i)` call for each index would also be, on average, ten times slower than it is currently.*
 
 ### Listan iterointi (*accessArrayListWithIterator* ja *accessLinkedListWithIterator*)
 
