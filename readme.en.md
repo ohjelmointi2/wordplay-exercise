@@ -70,8 +70,6 @@ public void accessArrayListWithIndex() {
 }
 ```
 
-Yllä oleva [`ArrayList`-tyyppistä listaa hyödyntävä koodi](./src/main/java/wordplay/benchmark/ArrayListBenchmark.java) on lähes identtinen [alla olevan `LinkedList`-version kanssa](./src/main/java/wordplay/benchmark/LinkedListBenchmark.java):
-
 The above code [utilizing an `ArrayList` type list](./src/main/java/wordplay/benchmark/ArrayListBenchmark.java) is almost identical to the [below `LinkedList` version](./src/main/java/wordplay/benchmark/LinkedListBenchmark.java):
 
 ```java
@@ -129,9 +127,9 @@ The durations and counts of operations are not as straightforward as presented a
 
 💡 *It is also important to note that as the dataset size increases, the performance difference also grows. If the list had ten times the number of elements, traversing the `ArrayList` would take ten times longer. Traversing the `LinkedList`, on the other hand, would take approximately a hundred times longer, because there would be ten times more indices to traverse. Additionally, each `get(i)` call for each index would also be, on average, ten times slower than it is currently.*
 
-### Listan iterointi (*accessArrayListWithIterator* ja *accessLinkedListWithIterator*)
+### Iterating a list (*accessArrayListWithIterator* and *accessLinkedListWithIterator*)
 
-Samoissa suorituskykytestiluokissa [`ArrayListBenchmark`](./src/main/java/wordplay/benchmark/ArrayListBenchmark.java) ja [`LinkedListBenchmark`](./src/main/java/wordplay/benchmark/LinkedListBenchmark.java) on myös toiset testimetodit, joissa sekä `ArrayList`- että `LinkedList`-tyyppisten listojen arvot käydään läpi yksi kerrallaan *iteroimalla*:
+In the same performance test classes [`ArrayListBenchmark`](./src/main/java/wordplay/benchmark/ArrayListBenchmark.java) and [`LinkedListBenchmark`](./src/main/java/wordplay/benchmark/LinkedListBenchmark.java), there are also other test methods where the values of both `ArrayList` and `LinkedList` type lists are iterated through one by one using *iteration*:
 
 ```java
 ArrayList<String> arrayList = new ArrayList<>(finnishWords);
@@ -142,7 +140,7 @@ public void accessArrayListWithIterator() {
         word.length();
     }
 
-    // metodin suoritusaika on keskimäärin 0,0001 sekuntia
+    //average execution time of the method is 0,0001 seconds
 }
 ```
 
@@ -155,11 +153,11 @@ public void accessLinkedListWithIterator() {
         word.length();
     }
 
-    // metodin suoritusaika on keskimäärin 0,0001 sekuntia
+    //average execution time of the method is 0,0001 seconds
 }
 ```
 
-Tässä tapauksessa listojen suorituskyvyssä ei ole havaittavissa eroavaisuuksia suorituskykytestien perusteella. Molempien metodien suoritusaika on noin 10<sup>-4</sup> eli 0,0001 sekuntia:
+In this case, no differences in performance are observed between the lists based on the performance tests. The execution time for both methods is approximately 10<sup>-4</sup> or 0.0001 seconds:
 
 ```
 Benchmark                                           Mode  Cnt   Score    Error  Units
@@ -167,19 +165,19 @@ ArrayListBenchmark.accessArrayListWithIterator      avgt    5  ≈ 10⁻⁴     
 LinkedListBenchmark.accessLinkedListWithIterator    avgt    5  ≈ 10⁻⁴            s/op
 ```
 
-Tässä iterointiin perustuvassa ratkaisussa sama `LinkedList`-lista suoriutuu siis samasta tehtävästä noin 30&nbsp;000 kertaa paremmin kuin edellisessä indekseihin perustuvassa `get(i)`-ratkaisussa.
+In this iteration-based solution, the same `LinkedList` performs the same task approximately 30,000 times better than in the previous index-based `get(i)` solution.
 
-Parempi suorituskyky johtuu siitä, että seuraavan arvon hakeminen linkitetyltä listalta vaatii vain yhden operaation. Vaikka sekä indeksiin että iterointiin perustuvissa ratkaisuissa käytiin samat arvot läpi, `get(i)`-metodia käytettäessä jouduttiin tekemään valtavasti ylimääräistä työtä.
+The improved performance is due to the fact that fetching the next value from a linked list requires only one operation. Although the same values were traversed in both the index-based and iteration-based solutions, using the `get(i)` method required a significant amount of extra work.
 
-Sekä `ArrayList`:in että `LinkedList`:in suorituskyky on siis listaa iteroitaessa laskennallisesti sama:
+Therefore, the performance of both `ArrayList` and `LinkedList` is computationally the same when iterating through the list:
 
 ```java
-// n kappaletta sanoja, kukin vaatii vain yhden operaation:
+// n words, each requiring only one operation:
 for (String word : list) {
     word.length();
 }
 
-// Suorituskyky on O(n)
+// Performance is O(n)
 ```
 
 ### Pohdittavaa
@@ -190,14 +188,21 @@ Vaikka `ArrayList` näyttää edellä esitettyjen tietojen valossa olevan yliver
 
 Tutustu itsenäisesti [`addStringsToBeginningOfArrayList`](./src/main/java/wordplay/benchmark/ArrayListBenchmark.java)- ja [`addStringsToBeginningOfLinkedList`](./src/main/java/wordplay/benchmark/LinkedListBenchmark.java)-metodien toteutukseen ja niiden suorituskykyyn.
 
+### Considerations
+
+Although `ArrayList` appears to be superior to `LinkedList` based on the information presented above, the situation is not so straightforward.
+
+`ArrayList` performs poorly in situations where values are added to the beginning or middle of the list. In such cases, the values following the target index need to be [copied forward in the underlying array](https://github.com/openjdk/jdk/blob/6aa197667ad05bd93adf3afc7b06adbfb2b18a22/src/java.base/share/classes/java/util/ArrayList.java#L501-L522), which can mean copying the entire array's contents one step forward in the worst case. Similarly, when the underlying array of an `ArrayList` becomes full, it needs to be replaced with a new, larger array, which is also a performance-intensive operation. In `LinkedList` type lists, existing values do not need to be moved.
+
+Explore the implementations and performance of the [`addStringsToBeginningOfArrayList`](./src/main/java/wordplay/benchmark/ArrayListBenchmark.java) and [`addStringsToBeginningOfLinkedList`](./src/main/java/wordplay/benchmark/LinkedListBenchmark.java) methods independently.
+
 ```
 Benchmark                                              Mode  Cnt   Score    Error  Units
 ArrayListBenchmark.addStringsToBeginningOfArrayList    avgt    5   0.426 ±  0.052   s/op
 LinkedListBenchmark.addStringsToBeginningOfLinkedList  avgt    5   0.001 ±  0.001   s/op
 ```
 
-🚀 *Voit halutessasi kirjoittaa lisää suorituskykytestejä, joissa kokeilet erilaisia tapauksia, joissa eri tyyppiset kokoelmat suoriutuvat eri tavoin.*
-
+🚀 *You can also write additional performance tests if you wish, experimenting with different cases where various types of collections perform differently.*
 
 ## Osa 2: Koodaustehtävä
 
