@@ -279,7 +279,7 @@ Using the `HashMap` data structure covered in the course as part of this solutio
 
 ### Correct solution
 
-Information about the number of names found in the word list can be found in the accompanying file [ratkaisu.md](./ratkaisu.md).
+Information about the number of names found in the word list can be found in the accompanying file [ratkaisu.en.md](./ratkaisu.en.md).
 
 # Copyrights
 
