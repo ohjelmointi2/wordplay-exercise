@@ -99,7 +99,7 @@ In an `ArrayList` type list, searching for a specific value by index requires on
 // repeated as many times as the length of the list (n times):
 for (int i = 0; i < arrayList.size(); i++) {
 
-    // haku taulukosta vaatii vain 1 operaation
+    // search in an array only requires 1 operation
     arrayList.get(i);
 }
 
