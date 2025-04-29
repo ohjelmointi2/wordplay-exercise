@@ -51,7 +51,7 @@ LinkedListBenchmark.addStringsToBeginningOfLinkedList  avgt    5   0.001 ±  0.0
 
 Above, *"avgt"* means *"average time"*. *"Cnt"* refers to the number of executions, and *"score"* indicates the average duration of a single execution of the tested method. *"s/op"* is the unit, meaning seconds per method execution. A more detailed explanation of the executed methods can be found in the following paragraphs.
 
-### Searching the list byiIndex (*accessArrayListWithIndex* and *accessLinkedListWithIndex*)
+### Searching the list by index (*accessArrayListWithIndex* and *accessLinkedListWithIndex*)
 
 In the classes [`ArrayListBenchmark`](./src/main/java/wordplay/benchmark/ArrayListBenchmark.java) and [`LinkedListBenchmark`](./src/main/java/wordplay/benchmark/LinkedListBenchmark.java), the same operations are tested with both `ArrayList` and `LinkedList` types of lists. In the initial methods, a Finnish word list is traversed from start to finish, and for each word, its `length()` method is called.
 
