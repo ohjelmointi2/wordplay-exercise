@@ -283,15 +283,11 @@ Information about the number of names found in the word list can be found in the
 
 # Copyrights
 
-## Kotimaisten kielten keskuksen nykysuomen sanalista
+## Modern Finnish word list from the Institute for the Languages of Finland
 
 The exercise utilizes the [Modern Finnish word list from the Institute for the Languages of Finland](https://kaino.kotus.fi/sanat/nykysuomi/), which is licensed under the [GNU LGPL license](http://www.gnu.org/licenses/lgpl.html), the [EUPL v.1.1 license](http://joinup.ec.europa.eu/software/page/eupl/licence-eupl), and the [Creative Commons Attribution 3.0 license](http://creativecommons.org/licenses/by/3.0/deed.fi).
 
 The modified version used in the exercise, where the words are in plain text instead of XML, is borrowed from [Hugo van Kemenade's](https://github.com/hugovk) GitHub project [Every Finnish Word](https://github.com/hugovk/everyfinnishword).
-
-## Väestötietojärjestelmän suomalaisten nimiaineistot
-
-[Digi- ja väestötietovirasto (DVV)](https://www.avoindata.fi/data/fi/organization/digi_ja_vaestotietovirasto) on julkaissut tietoaineiston [Väestötietojärjestelmän suomalaisten nimiaineistot](https://www.avoindata.fi/data/fi/dataset/none) lisenssillä [Creative Commons Attribution 4.0 International License](https://creativecommons.org/licenses/by/4.0/).
 
 ## Name data from the Finnish Population Information System
 
