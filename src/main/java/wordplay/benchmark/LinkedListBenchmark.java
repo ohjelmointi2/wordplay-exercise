@@ -3,8 +3,6 @@ package wordplay.benchmark;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.openjdk.jmh.annotations.Benchmark;
-
 import wordplay.io.DictionaryReader;
 
 /**
@@ -30,21 +28,21 @@ public class LinkedListBenchmark extends BenchmarkConfig {
     // This is the list we will use in our benchmarks.
     private static final LinkedList<String> linkedList = new LinkedList<>(finnishWords);
 
-    @Benchmark
+    // @Benchmark
     public void accessLinkedListWithIndex() {
         for (int i = 0; i < linkedList.size(); i++) {
             linkedList.get(i).length(); // just any operation
         }
     }
 
-    @Benchmark
+    // @Benchmark
     public void accessLinkedListWithIterator() {
         for (String word : linkedList) {
             word.length(); // the same operation as above, for comparison
         }
     }
 
-    @Benchmark
+    // @Benchmark
     public void addStringsToBeginningOfLinkedList() {
         List<String> newList = new LinkedList<>();
 

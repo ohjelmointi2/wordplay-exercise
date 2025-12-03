@@ -3,8 +3,6 @@ package wordplay.benchmark;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.openjdk.jmh.annotations.Benchmark;
-
 import wordplay.io.DictionaryReader;
 
 /**
@@ -33,21 +31,21 @@ public class ArrayListBenchmark extends BenchmarkConfig {
     // This is the list we will use in our benchmarks.
     private static final ArrayList<String> arrayList = new ArrayList<>(finnishWords);
 
-    @Benchmark
+    // @Benchmark
     public void accessArrayListWithIndex() {
         for (int i = 0; i < arrayList.size(); i++) {
             arrayList.get(i).length(); // just any operation
         }
     }
 
-    @Benchmark
+    // @Benchmark
     public void accessArrayListWithIterator() {
         for (String word : arrayList) {
             word.length(); // the same operation as above, for comparison
         }
     }
 
-    @Benchmark
+    // @Benchmark
     public void addStringsToBeginningOfArrayList() {
         List<String> newList = new ArrayList<>();
 
